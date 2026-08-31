@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --arena-bg: #120306;
+    --arena-surface: #1e060b;
+    --arena-surface-elevated: #280a10;
+    --arena-surface-card: #23080e;
+    --arena-border: #3d0e17;
+    --arena-border-light: #591523;
+    --arena-wine: #5C0D1E;
+    --arena-wine-dark: #3E0813;
+    --arena-wine-light: #8B1832;
+    --arena-wine-glow: #A81E3D;
+    --arena-orange: #f27d26;
+    --arena-orange-dark: #c95c12;
+    --arena-orange-light: #ff974b;
+    --arena-text: #F8FAFC;
+    --arena-text-muted: #E2E8F0;
+    --arena-text-subtle: #94A3B8;
+  }
+
+  body {
+    background-color: #120306;
+    color: #F8FAFC;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Custom scrollbars for dark immersive theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #180408;
+}
+::-webkit-scrollbar-thumb {
+  background: #3d0e17;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #591523;
+}
+
+/* Touch feedback for rapid mobile actions */
+.active-press:active {
+  transform: scale(0.97);
+  transition: transform 0.08s ease;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+

@@ -1,0 +1,6 @@
+{
+  "name": "Arena Romano - Gestão de Quadra e Comanda Digital",
+  "description": "Sistema ágil de gerenciamento esportivo, comandas individuais por jogador, cálculo progressivo por quantidade e importação de listas do WhatsApp para a Arena Romano.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
