@@ -25,13 +25,15 @@
     color: #F8FAFC;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
 /* Custom scrollbars for dark immersive theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #180408;
@@ -44,10 +46,34 @@
   background: #591523;
 }
 
+/* Utilities for fast touch performance */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.touch-pan-x {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.touch-pan-y {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Touch feedback for rapid mobile actions */
 .active-press:active {
-  transform: scale(0.97);
-  transition: transform 0.08s ease;
+  transform: scale(0.95);
+  transition: transform 0.06s ease;
+}
+
+/* Safe area padding for mobile bottom bar */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 @keyframes pulse-subtle {

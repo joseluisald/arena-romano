@@ -3,13 +3,9 @@ import { Game } from '../types';
 import { store } from '../services/store';
 import { formatCurrency } from '../utils/pricing';
 import { 
-  CalendarDays, 
   Flame, 
-  Users, 
-  Beer, 
   Clock, 
   ArrowRight, 
-  TrendingUp,
   AlertCircle
 } from 'lucide-react';
 
@@ -74,59 +70,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             onChange={e => setSelectedDate(e.target.value)}
             className="text-xs font-semibold text-white bg-[#181822] hover:bg-[#20202e] px-3 py-1.5 rounded-xl border border-[#28283a] focus:border-[#f27d26] outline-none cursor-pointer"
           />
-        </div>
-      </div>
-
-      {/* Summary KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-        <div className="bg-[#121218] p-3 rounded-xl border border-[#20202c]">
-          <div className="flex items-center justify-between text-slate-400 mb-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider">Jogos Hoje</span>
-            <CalendarDays size={15} className="text-orange-400" />
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-xl sm:text-2xl font-bold text-white">
-              {dailyStats.games_count}
-            </span>
-            <span className="text-[11px] text-slate-400">
-              ({dailyStats.active_games} em jogo)
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-[#121218] p-3 rounded-xl border border-[#20202c]">
-          <div className="flex items-center justify-between text-slate-400 mb-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider">Jogadores</span>
-            <Users size={15} className="text-orange-400" />
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-xl sm:text-2xl font-bold text-white">
-              {dailyStats.present_players}
-            </span>
-            <span className="text-[11px] text-slate-400">
-              / {dailyStats.total_players} presentes
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-[#121218] p-3 rounded-xl border border-[#20202c]">
-          <div className="flex items-center justify-between text-slate-400 mb-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider">Consumo Bar</span>
-            <Beer size={15} className="text-orange-400" />
-          </div>
-          <span className="text-lg sm:text-xl font-black text-[#f27d26] font-mono">
-            {formatCurrency(dailyStats.products_revenue)}
-          </span>
-        </div>
-
-        <div className="bg-[#121218] p-3 rounded-xl border border-[#28283a]">
-          <div className="flex items-center justify-between text-slate-400 mb-0.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider">Total do Dia</span>
-            <TrendingUp size={15} className="text-orange-400" />
-          </div>
-          <span className="text-lg sm:text-xl font-black text-emerald-400 font-mono">
-            {formatCurrency(dailyStats.total_revenue)}
-          </span>
         </div>
       </div>
 

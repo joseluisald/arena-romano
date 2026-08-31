@@ -113,43 +113,21 @@ export const Header: React.FC<HeaderProps> = ({
       {activeLiveGame && (
         <div 
           onClick={() => onOpenLiveGame(activeLiveGame.id)}
-          className="lg:hidden bg-gradient-to-r from-[#1c1417] via-[#2a171a] to-[#1c1417] border-t border-[#3a1d24] px-3 py-1.5 flex items-center justify-between text-xs text-white cursor-pointer"
+          className="lg:hidden bg-gradient-to-r from-[#1c1417] via-[#2a171a] to-[#1c1417] border-t border-[#3a1d24] px-3.5 py-2 flex items-center justify-between text-xs text-white cursor-pointer active-press"
         >
-          <div className="flex items-center gap-1.5 truncate">
-            <Flame size={13} className="text-orange-400 animate-bounce shrink-0" />
-            <span className="font-bold text-orange-400">JOGO EM ANDAMENTO:</span>
-            <span className="truncate text-slate-200">{activeLiveGame.title}</span>
+          <div className="flex items-center gap-2 truncate">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+            </span>
+            <span className="font-bold text-orange-400 text-[11px] shrink-0">EM JOGO:</span>
+            <span className="truncate text-slate-200 text-xs font-semibold">{activeLiveGame.title}</span>
           </div>
           <span className="bg-[#f27d26] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-sm shrink-0 ml-2">
             Ver Comandas ➜
           </span>
         </div>
       )}
-
-      {/* Mobile Bottom-bar navigation tabs for quick thumbs */}
-      <div className="md:hidden flex items-center justify-around bg-[#09090d] border-t border-[#1a1a24] py-1 text-[10px] text-slate-400 font-medium">
-        {[
-          { id: 'dashboard' as NavTab, label: 'Início', icon: <LayoutDashboard size={16} /> },
-          { id: 'games' as NavTab, label: 'Jogos', icon: <CalendarDays size={16} /> },
-          { id: 'products' as NavTab, label: 'Bar', icon: <Package size={16} /> },
-          { id: 'schedules' as NavTab, label: 'Quadra', icon: <Clock size={16} /> },
-          { id: 'reports' as NavTab, label: 'Caixa', icon: <TrendingUp size={16} /> },
-        ].map(item => {
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onSelectTab(item.id)}
-              className={`flex flex-col items-center py-1 px-2 rounded-lg transition-colors cursor-pointer ${
-                isActive ? 'text-[#f27d26] font-bold' : 'hover:text-slate-200'
-              }`}
-            >
-              {item.icon}
-              <span className="mt-0.5">{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
     </header>
   );
 };

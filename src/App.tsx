@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header, NavTab } from './components/Header';
 import { Sidebar } from './components/Sidebar';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { DashboardView } from './components/DashboardView';
 import { GameDetailsView } from './components/GameDetailsView';
 import { ProductsView } from './components/ProductsView';
@@ -81,7 +82,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 pb-20 md:pb-0">
         {/* Top Header Bar */}
         <Header
           activeTab={activeTab}
@@ -243,6 +244,16 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* Mobile Fixed Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        onSelectTab={handleSelectTab}
+        activeLiveGame={activeLiveGame}
+        onOpenLiveGame={handleOpenGame}
+        onOpenNewGameModal={() => setIsNewGameModalOpen(true)}
+        onOpenWhatsAppModal={() => setIsWhatsAppImportOpen(true)}
+      />
 
       {/* WhatsApp Import Modal */}
       {isWhatsAppImportOpen && (

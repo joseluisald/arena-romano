@@ -253,36 +253,43 @@ export const SchedulesView: React.FC = () => {
 
       {/* Create / Edit Slot Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-md bg-[#111116] rounded-2xl shadow-2xl border border-[#272736] overflow-hidden my-auto text-slate-100">
-            <div className="bg-[#161622] text-white px-5 py-4 flex items-center justify-between border-b border-[#262638]">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
+          <div className="relative w-full max-w-md bg-[#111116] rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-[#272736] overflow-hidden text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
+            
+            {/* Mobile drag handle indicator */}
+            <div className="sm:hidden w-12 h-1 bg-slate-700/60 rounded-full mx-auto mt-2 mb-1" />
+
+            <div className="bg-[#161622] text-white px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#262638]">
               <h2 className="text-base font-bold text-white">
                 {editingSlot ? 'Editar Horário Padrão' : 'Novo Horário Padrão'}
               </h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white cursor-pointer">
-                <X size={20} />
+              <button 
+                onClick={() => setIsModalOpen(false)} 
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active-press"
+              >
+                <X size={19} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveSlot} className="p-5 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSaveSlot} className="p-4 space-y-3.5 touch-pan-y">
+              <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Horário Início *</label>
+                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Horário Início *</label>
                   <input
                     type="time"
                     required
                     value={time}
                     onChange={e => setTime(e.target.value)}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-bold"
+                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-bold min-h-[40px]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Duração *</label>
+                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Duração *</label>
                   <select
                     value={durationMinutes}
                     onChange={e => setDurationMinutes(Number(e.target.value))}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-medium"
+                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-medium min-h-[40px]"
                   >
                     <option value={60}>60 minutos (1h)</option>
                     <option value={90}>90 minutos (1h30)</option>
@@ -292,25 +299,25 @@ export const SchedulesView: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">Valor Padrão da Quadra (R$) *</label>
+                <label className="text-[11px] font-medium text-slate-300 block mb-1">Valor Padrão da Quadra (R$) *</label>
                 <input
                   type="number"
                   step="10"
                   required
                   value={defaultPrice}
                   onChange={e => setDefaultPrice(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] focus:border-[#f27d26] outline-none font-bold text-[#f27d26]"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] focus:border-[#f27d26] outline-none font-bold text-[#f27d26] min-h-[40px] font-mono"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">Rótulo / Identificação</label>
+                <label className="text-[11px] font-medium text-slate-300 block mb-1">Rótulo / Identificação</label>
                 <input
                   type="text"
                   placeholder="Ex: Horário Nobre, Happy Hour..."
                   value={label}
                   onChange={e => setLabel(e.target.value)}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none min-h-[40px]"
                 />
               </div>
 
@@ -327,19 +334,20 @@ export const SchedulesView: React.FC = () => {
                 </label>
               </div>
 
-              <div className="pt-3 border-t border-[#22222c] flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-[#22222c] flex items-center justify-end gap-2 pb-safe">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-300 hover:text-white font-semibold text-xs border border-[#272736] hover:bg-[#1c1c27] cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-slate-300 hover:text-white font-semibold text-xs border border-[#272736] hover:bg-[#1c1c27] cursor-pointer min-h-[42px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 cursor-pointer transition-all"
+                  className="px-4 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 cursor-pointer transition-all active-press flex items-center justify-center gap-2 flex-1 sm:flex-initial min-h-[42px]"
                 >
-                  Salvar
+                  <Check size={16} />
+                  <span>Salvar</span>
                 </button>
               </div>
             </form>

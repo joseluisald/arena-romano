@@ -337,43 +337,46 @@ export const ProductsView: React.FC = () => {
 
       {/* Add / Edit Product Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-xl bg-[#111116] rounded-2xl shadow-2xl border border-[#272736] overflow-hidden my-auto max-h-[92vh] flex flex-col text-slate-100">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
+          <div className="relative w-full max-w-xl bg-[#111116] rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-[#272736] overflow-hidden max-h-[94vh] sm:max-h-[92vh] flex flex-col text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
             
+            {/* Mobile drag handle indicator */}
+            <div className="sm:hidden w-12 h-1 bg-slate-700/60 rounded-full mx-auto mt-2 mb-1" />
+
             {/* Header */}
-            <div className="bg-[#161622] text-white px-5 py-4 flex items-center justify-between border-b border-[#262638]">
+            <div className="bg-[#161622] text-white px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#262638]">
               <h2 className="text-base sm:text-lg font-bold tracking-tight text-white">
                 {editingProduct ? 'Editar Produto' : 'Cadastrar Novo Produto'}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active-press"
               >
-                <X size={20} />
+                <X size={19} />
               </button>
             </div>
 
             {/* Form Body */}
-            <form onSubmit={handleSaveProduct} className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
+            <form onSubmit={handleSaveProduct} className="p-4 overflow-y-auto space-y-3.5 flex-1 touch-pan-y">
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">Nome do Produto *</label>
+                <label className="text-[11px] font-bold text-slate-300 block mb-1">Nome do Produto *</label>
                 <input
                   type="text"
                   required
-                  placeholder="Ex: Cerveja Lata (350ml), Churrasco no Pão..."
+                  placeholder="Ex: Cerveja Lata (350ml), Porção de Calabresa..."
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm font-semibold rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none"
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm font-semibold rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none min-h-[42px]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Categoria</label>
+                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Categoria</label>
                   <select
                     value={category}
                     onChange={e => setCategory(e.target.value as ProductCategory)}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-medium"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-medium min-h-[40px]"
                   >
                     <option value="cervejas">Cervejas</option>
                     <option value="churrasco">Churrasco</option>
@@ -384,9 +387,9 @@ export const ProductsView: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-slate-300 block mb-1">Preço Unitário (1 unidade) *</label>
+                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Preço Unitário (1 unidade) *</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2 text-xs text-slate-500 font-bold">R$</span>
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-bold">R$</span>
                     <input
                       type="number"
                       step="0.50"
@@ -398,63 +401,65 @@ export const ProductsView: React.FC = () => {
                         setUnitPrice(p);
                         setPriceTiers(priceTiers.map(t => t.quantity === 1 ? { ...t, price: p } : t));
                       }}
-                      className="w-full pl-8 pr-3 py-2 text-sm font-bold text-[#f27d26] rounded-xl border border-[#272736] bg-[#0c0c11] focus:border-[#f27d26] outline-none"
+                      className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm font-bold text-[#f27d26] rounded-xl border border-[#272736] bg-[#0c0c11] focus:border-[#f27d26] outline-none min-h-[40px] font-mono"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-medium text-slate-300 block mb-1">Descrição / Detalhes</label>
+                <label className="text-[11px] font-medium text-slate-300 block mb-1">Descrição / Detalhes</label>
                 <input
                   type="text"
                   placeholder="Ex: Marcas disponíveis, acompanhamentos..."
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none min-h-[40px]"
                 />
               </div>
 
               {/* Progressive Pricing Tiers Editor */}
-              <div className="p-3.5 bg-[#0c0c11] border border-[#272736] rounded-xl space-y-3">
+              <div className="p-3 bg-[#0c0c11] border border-[#272736] rounded-2xl space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-extrabold text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles size={14} className="text-orange-400" />
+                  <span className="text-[11px] font-extrabold text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles size={13} className="text-orange-400" />
                     Promoções por Quantidade
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[10px] text-slate-400">
                   Defina descontos para compra em volume. O sistema calcula a melhor combinação automaticamente.
                 </p>
 
                 {/* Add new tier inputs */}
-                <div className="flex items-end gap-2 bg-[#161622] p-2.5 rounded-lg border border-[#262638]">
-                  <div className="w-24">
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Quantidade</label>
-                    <input
-                      type="number"
-                      min="2"
-                      value={newTierQty}
-                      onChange={e => setNewTierQty(Math.max(2, Number(e.target.value)))}
-                      className="w-full px-2 py-1 text-xs font-bold border border-[#2f2f42] bg-[#0c0c11] text-white rounded outline-none"
-                    />
-                  </div>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 bg-[#161622] p-2.5 rounded-xl border border-[#262638]">
+                  <div className="flex-1 grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Quantidade</label>
+                      <input
+                        type="number"
+                        min="2"
+                        value={newTierQty}
+                        onChange={e => setNewTierQty(Math.max(2, Number(e.target.value)))}
+                        className="w-full px-2.5 py-1.5 text-xs font-bold border border-[#2f2f42] bg-[#0c0c11] text-white rounded-lg outline-none min-h-[36px]"
+                      />
+                    </div>
 
-                  <div className="flex-1">
-                    <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Preço do Combo (R$)</label>
-                    <input
-                      type="number"
-                      step="0.50"
-                      value={newTierPrice}
-                      onChange={e => setNewTierPrice(Number(e.target.value))}
-                      className="w-full px-2 py-1 text-xs font-bold border border-[#2f2f42] bg-[#0c0c11] text-white rounded outline-none"
-                    />
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 block mb-0.5">Preço Combo (R$)</label>
+                      <input
+                        type="number"
+                        step="0.50"
+                        value={newTierPrice}
+                        onChange={e => setNewTierPrice(Number(e.target.value))}
+                        className="w-full px-2.5 py-1.5 text-xs font-bold border border-[#2f2f42] bg-[#0c0c11] text-white rounded-lg outline-none min-h-[36px]"
+                      />
+                    </div>
                   </div>
 
                   <button
                     type="button"
                     onClick={handleAddTier}
-                    className="px-3 py-1.5 bg-[#f27d26] hover:bg-[#ff8a3d] text-white rounded text-xs font-bold cursor-pointer active:scale-95 transition-colors"
+                    className="px-3.5 py-2 bg-[#f27d26] hover:bg-[#ff8a3d] text-white rounded-xl text-xs font-bold cursor-pointer active-press transition-colors min-h-[36px]"
                   >
                     + Salvar Faixa
                   </button>
@@ -465,14 +470,14 @@ export const ProductsView: React.FC = () => {
                   {priceTiers.map(tier => (
                     <div
                       key={tier.quantity}
-                      className="flex items-center justify-between p-2 bg-[#161622] rounded-lg border border-[#262638] text-xs"
+                      className="flex items-center justify-between p-2 bg-[#161622] rounded-xl border border-[#262638] text-xs"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-white">{tier.quantity} unidade(s)</span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-white">{tier.quantity} un</span>
                         <span className="text-slate-500">➜</span>
-                        <span className="font-extrabold text-[#f27d26]">{formatCurrency(tier.price)}</span>
+                        <span className="font-extrabold text-[#f27d26] font-mono">{formatCurrency(tier.price)}</span>
                         {tier.quantity > 1 && (
-                          <span className="text-[10px] text-emerald-300 font-bold bg-emerald-500/15 px-1.5 py-0.2 rounded border border-emerald-500/30">
+                          <span className="text-[9px] text-emerald-300 font-bold bg-emerald-500/15 px-1.5 py-0.5 rounded border border-emerald-500/30">
                             Economia: {formatCurrency((tier.quantity * unitPrice) - tier.price)}
                           </span>
                         )}
@@ -482,9 +487,9 @@ export const ProductsView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleRemoveTier(tier.quantity)}
-                          className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer"
+                          className="text-slate-400 hover:text-rose-400 p-1 cursor-pointer active-press"
                         >
-                          <Trash2 size={13} />
+                          <Trash2 size={14} />
                         </button>
                       ) : (
                         <span className="text-[10px] text-slate-500 font-medium">Base</span>
@@ -494,19 +499,19 @@ export const ProductsView: React.FC = () => {
                 </div>
 
                 {/* Interactive Dynamic Price Simulator */}
-                <div className="mt-3 pt-3 border-t border-[#262638] bg-[#12121c] p-2.5 rounded-lg text-xs">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-bold text-slate-300 flex items-center gap-1">
+                <div className="mt-2 pt-2 border-t border-[#262638] bg-[#12121c] p-2.5 rounded-xl text-xs">
+                  <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+                    <span className="font-bold text-slate-300 flex items-center gap-1 text-[11px]">
                       <Calculator size={13} className="text-orange-400" />
-                      Simulador de Cálculo:
+                      Simulador:
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 overflow-x-auto pb-0.5">
                       {[1, 2, 3, 4, 5, 6, 8, 10].map(n => (
                         <button
                           key={n}
                           type="button"
                           onClick={() => setTestSimulatorQty(n)}
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition-colors ${
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${
                             testSimulatorQty === n
                               ? 'bg-[#f27d26] text-white'
                               : 'bg-[#0c0c11] text-slate-300 border border-[#272738]'
@@ -518,14 +523,14 @@ export const ProductsView: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-[#0c0c11] p-2 rounded border border-[#272738] flex items-center justify-between">
+                  <div className="bg-[#0c0c11] p-2 rounded-lg border border-[#272738] flex items-center justify-between">
                     <div>
-                      <span className="text-slate-300 block">
-                        Para <strong>{testSimulatorQty} unidades</strong>: {liveSimulatorResult.breakdown}
+                      <span className="text-slate-300 text-xs block">
+                        Para <strong>{testSimulatorQty} un</strong>: {liveSimulatorResult.breakdown}
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-black text-[#f27d26]">
+                      <span className="text-xs sm:text-sm font-black text-[#f27d26] font-mono">
                         {formatCurrency(liveSimulatorResult.total)}
                       </span>
                     </div>
@@ -534,20 +539,20 @@ export const ProductsView: React.FC = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="pt-3 border-t border-[#272736] flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-[#272736] flex items-center justify-end gap-2 pb-safe">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-300 hover:text-white font-semibold text-xs sm:text-sm hover:bg-[#1c1c27] transition-colors cursor-pointer border border-[#272736]"
+                  className="px-4 py-2.5 rounded-xl text-slate-300 hover:text-white font-semibold text-xs hover:bg-[#1c1c27] transition-colors cursor-pointer border border-[#272736] min-h-[42px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-500/20 transition-all active-press cursor-pointer flex items-center gap-2"
+                  className="px-4 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 transition-all active-press cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial min-h-[42px]"
                 >
                   <Check size={16} />
-                  Salvar Produto
+                  <span>Salvar Produto</span>
                 </button>
               </div>
             </form>

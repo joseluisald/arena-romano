@@ -84,20 +84,23 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-[#0e0e13] rounded-2xl shadow-2xl border border-[#22222f] overflow-hidden my-auto max-h-[92vh] flex flex-col text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
+      <div className="relative w-full max-w-lg bg-[#0e0e13] rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-[#22222f] overflow-hidden max-h-[94vh] sm:max-h-[90vh] flex flex-col text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
         
+        {/* Mobile drag handle indicator */}
+        <div className="sm:hidden w-12 h-1 bg-slate-700/60 rounded-full mx-auto mt-2 mb-1" />
+
         {/* Header */}
-        <div className="bg-[#14141d] px-4 sm:px-5 py-3.5 flex items-center justify-between border-b border-[#20202c]">
+        <div className="bg-[#14141d] px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#20202c]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30">
+            <div className="p-2 rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30 shrink-0">
               <UtensilsCrossed size={18} />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
                 Lançar Churrasco / Rateio Geral
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-[11px] text-slate-400">
                 Aplica a despesa nas comandas dos jogadores de uma só vez.
               </p>
             </div>
@@ -105,14 +108,14 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active-press"
           >
-            <X size={18} />
+            <X size={19} />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-4 sm:p-5 overflow-y-auto space-y-4 flex-1">
+        <form onSubmit={handleSubmit} className="p-4 overflow-y-auto space-y-4 flex-1 touch-pan-y">
           
           {/* Quick presets */}
           <div>
@@ -129,7 +132,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                     setExpensePrice(preset.price);
                     setSplitMode('per_player');
                   }}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer active-press ${
                     expenseName === preset.name
                       ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
                       : 'bg-[#14141d] text-slate-300 border-[#222230] hover:bg-[#1a1a26]'
@@ -152,7 +155,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                 value={expenseName}
                 onChange={e => setExpenseName(e.target.value)}
                 placeholder="Ex: Churrasco, Rateio Carne, Gelo..."
-                className="w-full px-3 py-2 text-xs font-semibold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none"
               />
             </div>
 
@@ -161,9 +164,9 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
               <button
                 type="button"
                 onClick={() => setSplitMode('per_player')}
-                className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border text-left cursor-pointer ${
+                className={`p-3 rounded-xl text-xs font-bold transition-all border text-left cursor-pointer active-press min-h-[44px] ${
                   splitMode === 'per_player'
-                    ? 'bg-orange-500/15 text-orange-300 border-orange-500/40'
+                    ? 'bg-orange-500/15 text-orange-300 border-orange-500/40 shadow-sm'
                     : 'bg-[#14141d] text-slate-400 border-[#222230]'
                 }`}
               >
@@ -174,9 +177,9 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
               <button
                 type="button"
                 onClick={() => setSplitMode('total_split')}
-                className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border text-left cursor-pointer ${
+                className={`p-3 rounded-xl text-xs font-bold transition-all border text-left cursor-pointer active-press min-h-[44px] ${
                   splitMode === 'total_split'
-                    ? 'bg-orange-500/15 text-orange-300 border-orange-500/40'
+                    ? 'bg-orange-500/15 text-orange-300 border-orange-500/40 shadow-sm'
                     : 'bg-[#14141d] text-slate-400 border-[#222230]'
                 }`}
               >
@@ -192,7 +195,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                   Valor por Jogador (R$):
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span>
                   <input
                     type="number"
                     step="0.50"
@@ -200,7 +203,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                     value={expensePrice}
                     onChange={e => setExpensePrice(e.target.value)}
                     placeholder="30.00"
-                    className="w-full pl-9 pr-3 py-2 text-sm font-bold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none font-mono"
+                    className="w-full pl-10 pr-3.5 py-2.5 text-sm font-bold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none font-mono"
                   />
                 </div>
               </div>
@@ -210,7 +213,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                   Valor Total da Conta (R$):
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">R$</span>
                   <input
                     type="number"
                     step="1"
@@ -218,7 +221,7 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                     value={totalBillAmount}
                     onChange={e => setTotalBillAmount(e.target.value)}
                     placeholder="360.00"
-                    className="w-full pl-9 pr-3 py-2 text-sm font-bold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none font-mono"
+                    className="w-full pl-10 pr-3.5 py-2.5 text-sm font-bold bg-[#14141d] text-white rounded-xl border border-[#222230] focus:border-[#f27d26] outline-none font-mono"
                   />
                 </div>
               </div>
@@ -236,22 +239,22 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                 <button
                   type="button"
                   onClick={selectPresentOnly}
-                  className="px-2 py-0.5 rounded bg-[#14141d] text-emerald-400 hover:bg-[#1a1a26] text-[11px] font-semibold border border-[#222230]"
+                  className="px-2.5 py-1 rounded-lg bg-[#14141d] text-emerald-400 hover:bg-[#1a1a26] text-[11px] font-bold border border-[#222230] active-press"
                 >
                   Só Presentes ({presentPlayers.length})
                 </button>
                 <button
                   type="button"
                   onClick={selectAll}
-                  className="px-2 py-0.5 rounded bg-[#14141d] text-slate-300 hover:bg-[#1a1a26] text-[11px] font-semibold border border-[#222230]"
+                  className="px-2.5 py-1 rounded-lg bg-[#14141d] text-slate-300 hover:bg-[#1a1a26] text-[11px] font-bold border border-[#222230] active-press"
                 >
                   Todos ({game.players.length})
                 </button>
               </div>
             </div>
 
-            {/* Players checkboxes grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-48 overflow-y-auto p-1">
+            {/* Players checkboxes grid with large hitboxes */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-52 overflow-y-auto p-0.5">
               {game.players.map(player => {
                 const isSelected = selectedPlayerIds.includes(player.id);
                 return (
@@ -259,13 +262,13 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
                     key={player.id}
                     type="button"
                     onClick={() => togglePlayer(player.id)}
-                    className={`flex items-center justify-between p-2 rounded-xl text-left border transition-all text-xs cursor-pointer ${
+                    className={`flex items-center justify-between p-2.5 rounded-xl text-left border transition-all text-xs cursor-pointer active-press min-h-[42px] ${
                       isSelected
-                        ? 'bg-orange-500/15 border-orange-500/40 text-white'
+                        ? 'bg-orange-500/15 border-orange-500/40 text-white shadow-xs'
                         : 'bg-[#14141d] border-[#20202c] text-slate-400 hover:text-slate-200'
                     }`}
                   >
-                    <span className="truncate font-semibold">{player.name}</span>
+                    <span className="truncate font-semibold text-xs">{player.name}</span>
                     <span className={`h-4 w-4 rounded flex items-center justify-center text-[10px] shrink-0 ml-1 ${
                       isSelected ? 'bg-[#f27d26] text-white' : 'border border-[#2e2e40]'
                     }`}>
@@ -278,38 +281,38 @@ export const BulkExpenseModal: React.FC<BulkExpenseModalProps> = ({
           </div>
 
           {/* Summary Box */}
-          <div className="bg-[#14141d] p-3 rounded-xl border border-[#20202c] flex items-center justify-between text-xs">
+          <div className="bg-[#14141d] p-3 rounded-2xl border border-[#20202c] flex items-center justify-between text-xs">
             <div>
-              <span className="text-[10px] text-slate-400 font-semibold block uppercase">Resumo do Lançamento</span>
+              <span className="text-[10px] text-slate-400 font-semibold block uppercase">Lançamento</span>
               <span className="text-sm font-bold text-white">
-                {formatCurrency(pricePerPlayer)} <span className="text-slate-400 font-normal text-xs">por jogador</span>
+                {formatCurrency(pricePerPlayer)} <span className="text-slate-400 font-normal text-xs">/ jogador</span>
               </span>
             </div>
 
             <div className="text-right">
               <span className="text-[10px] text-slate-400 font-semibold block uppercase">Total Geral</span>
-              <span className="text-sm font-black text-[#f27d26]">
+              <span className="text-sm font-black text-[#f27d26] font-mono">
                 {formatCurrency(grandTotal)}
               </span>
             </div>
           </div>
 
-          {/* Submit */}
-          <div className="pt-2 flex items-center justify-end gap-2">
+          {/* Submit Action */}
+          <div className="pt-2 flex items-center justify-end gap-2 pb-safe">
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-2 rounded-xl bg-[#14141d] text-slate-300 hover:bg-[#1c1c28] text-xs font-semibold border border-[#222230] cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-[#14141d] text-slate-300 hover:bg-[#1c1c28] text-xs font-semibold border border-[#222230] cursor-pointer min-h-[42px]"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={selectedPlayerIds.length === 0 || pricePerPlayer <= 0}
-              className="px-4 py-2 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-orange-500/20 active-press cursor-pointer flex items-center gap-1.5"
+              className="px-4 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-orange-500/20 active-press cursor-pointer flex items-center justify-center gap-1.5 flex-1 sm:flex-initial min-h-[42px]"
             >
               <UtensilsCrossed size={14} />
-              <span>Lançar {formatCurrency(pricePerPlayer)} para {selectedPlayerIds.length} jogadores</span>
+              <span>Lançar {formatCurrency(pricePerPlayer)} ({selectedPlayerIds.length})</span>
             </button>
           </div>
         </form>
