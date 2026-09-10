@@ -9,7 +9,11 @@ import { SchedulesView } from './components/SchedulesView';
 import { ReportsView } from './components/ReportsView';
 import { WhatsAppImportModal } from './components/WhatsAppImportModal';
 import { GameFormModal } from './components/GameFormModal';
+import { LoginView } from './components/LoginView';
+import { SystemLogsModal } from './components/SystemLogsModal';
 import { store } from './services/store';
+import { authService } from './services/auth';
+import { AuthState } from './types';
 import { formatCurrency } from './utils/pricing';
 import { 
   CalendarDays, 
@@ -24,6 +28,16 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  // Auth state subscription
+  const [authState, setAuthState] = useState<AuthState>(authService.getState());
+
+  useEffect(() => {
+    const unsubscribeAuth = authService.subscribe((state) => {
+      setAuthState(state);
+    });
+    return unsubscribeAuth;
+  }, []);
+
   // Store subscription trigger
   const [, setTick] = useState(0);
 
@@ -41,10 +55,16 @@ export default function App() {
   // Global Modals
   const [isWhatsAppImportOpen, setIsWhatsAppImportOpen] = useState(false);
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
+  const [isSystemLogsOpen, setIsSystemLogsOpen] = useState(false);
 
   // Games Tab Filter State
   const [gamesSearch, setGamesSearch] = useState('');
   const [gamesStatusFilter, setGamesStatusFilter] = useState<'todos' | 'agendado' | 'em_andamento' | 'finalizado'>('todos');
+
+  // If user is not authenticated, display Login Area!
+  if (!authState.isAuthenticated) {
+    return <LoginView onLoginSuccess={() => setAuthState(authService.getState())} />;
+  }
 
   const allGames = store.getGames();
   const activeLiveGame = allGames.find(g => g.status === 'em_andamento') || null;
@@ -79,6 +99,9 @@ export default function App() {
         onOpenLiveGame={handleOpenGame}
         isOpenMobile={isSidebarOpenMobile}
         onCloseMobile={() => setIsSidebarOpenMobile(false)}
+        currentUser={authState.user}
+        onLogout={() => authService.logout()}
+        onOpenSystemLogs={() => setIsSystemLogsOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -92,6 +115,8 @@ export default function App() {
           onOpenNewGameModal={() => setIsNewGameModalOpen(true)}
           onOpenWhatsAppModal={() => setIsWhatsAppImportOpen(true)}
           onToggleSidebarMobile={() => setIsSidebarOpenMobile(true)}
+          currentUser={authState.user}
+          onLogout={() => authService.logout()}
         />
 
         {/* View Router */}
@@ -274,6 +299,13 @@ export default function App() {
           onSaved={(newGameId) => {
             setSelectedGameId(newGameId);
           }}
+        />
+      )}
+
+      {/* System Logs and MySQL Audit Modal */}
+      {isSystemLogsOpen && (
+        <SystemLogsModal
+          onClose={() => setIsSystemLogsOpen(false)}
         />
       )}
     </div>

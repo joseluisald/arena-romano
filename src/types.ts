@@ -104,3 +104,33 @@ export interface DailySummaryStats {
     total_sales: number;
   }>;
 }
+
+export type UserRole = 'admin' | 'operador' | 'gerente';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  role: UserRole;
+  active: boolean;
+  avatar_url?: string;
+  created_at?: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+}
+
+export interface SystemLogEntry {
+  id?: number | string;
+  method: string;
+  url: string;
+  status_code: number;
+  duration_ms: number;
+  user_identifier?: string;
+  client_ip?: string;
+  timestamp: string;
+}

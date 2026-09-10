@@ -1,17 +1,21 @@
 import React from 'react';
 import { ArenaLogo } from './ArenaLogo';
 import { NavTab } from './Header';
-import { Game } from '../types';
+import { Game, User } from '../types';
 import { 
   LayoutDashboard, 
   CalendarDays, 
   Package, 
   Clock, 
   TrendingUp, 
-  Flame,
-  Shield,
-  X,
-  ChevronRight
+  Flame, 
+  Shield, 
+  X, 
+  ChevronRight,
+  LogOut,
+  Activity,
+  Terminal,
+  Database
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,6 +25,9 @@ interface SidebarProps {
   onOpenLiveGame: (gameId: string) => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
+  currentUser?: User | null;
+  onLogout?: () => void;
+  onOpenSystemLogs?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -29,7 +36,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeLiveGame,
   onOpenLiveGame,
   isOpenMobile,
-  onCloseMobile
+  onCloseMobile,
+  currentUser,
+  onLogout,
+  onOpenSystemLogs,
 }) => {
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
     {
@@ -139,15 +149,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
             );
           })}
         </div>
+
+        {/* System Logs & DB Audit Button */}
+        <div className="px-3 pt-2">
+          <button
+            onClick={() => {
+              if (onOpenSystemLogs) onOpenSystemLogs();
+              onCloseMobile();
+            }}
+            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white bg-[#13131d] hover:bg-[#191926] border border-[#232334] transition-all cursor-pointer group"
+          >
+            <div className="flex items-center gap-2.5">
+              <Activity size={15} className="text-emerald-400 group-hover:animate-pulse" />
+              <span>Auditoria & Banco</span>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400 bg-black/40 px-1.5 py-0.5 rounded border border-[#252535]">
+              Logs
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* Bottom Section: Arena Identity Tag */}
-      <div className="p-3.5 border-t border-[#1b1b24] bg-[#0c0c11]">
-        <div className="flex items-center justify-between text-xs text-slate-400">
-          <span className="flex items-center gap-1.5 font-medium text-slate-300">
+      {/* Bottom Section: User Session & Arena Identity Tag */}
+      <div className="border-t border-[#1b1b24] bg-[#0c0c11]">
+        {/* User Card if logged in */}
+        {currentUser && (
+          <div className="p-3 border-b border-[#181822] flex items-center justify-between">
+            <div className="flex items-center gap-2.5 truncate">
+              <div className="w-8 h-8 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center font-bold text-orange-400 text-xs shrink-0">
+                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <div className="truncate">
+                <span className="text-xs font-bold text-white block truncate leading-tight">
+                  {currentUser.name}
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-orange-400/90 font-bold">
+                  {currentUser.role}
+                </span>
+              </div>
+            </div>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all cursor-pointer"
+                title="Sair do Sistema (Logout)"
+              >
+                <LogOut size={16} />
+              </button>
+            )}
+          </div>
+        )}
+
+        <div className="p-3 flex items-center justify-between text-xs text-slate-400">
+          <span className="flex items-center gap-1.5 font-medium text-slate-300 text-[11px]">
             <Shield size={13} className="text-orange-400" /> Arena Romano
           </span>
-          <span className="text-[10px] font-mono text-slate-400">v1.2</span>
+          <span className="text-[10px] font-mono text-slate-400">v2.0 • MySQL</span>
         </div>
       </div>
     </div>

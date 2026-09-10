@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArenaLogo } from './ArenaLogo';
-import { Game } from '../types';
+import { Game, User } from '../types';
 import { 
   Menu,
   Plus, 
@@ -10,7 +10,9 @@ import {
   CalendarDays,
   Package,
   Clock,
-  TrendingUp
+  TrendingUp,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
 
 export type NavTab = 'dashboard' | 'games' | 'products' | 'schedules' | 'reports';
@@ -23,6 +25,8 @@ interface HeaderProps {
   onOpenNewGameModal: () => void;
   onOpenWhatsAppModal: () => void;
   onToggleSidebarMobile?: () => void;
+  currentUser?: User | null;
+  onLogout?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -33,6 +37,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNewGameModal,
   onOpenWhatsAppModal,
   onToggleSidebarMobile,
+  currentUser,
+  onLogout,
 }) => {
   const getTabTitle = (tab: NavTab) => {
     switch (tab) {
@@ -106,6 +112,18 @@ export const Header: React.FC<HeaderProps> = ({
             <Plus size={15} />
             <span>Novo Jogo</span>
           </button>
+
+          {/* User Profile & Logout button */}
+          {currentUser && onLogout && (
+            <button
+              onClick={onLogout}
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 sm:py-2 rounded-xl bg-[#171722] hover:bg-rose-500/15 text-slate-300 hover:text-rose-300 border border-[#272738] hover:border-rose-500/30 text-xs font-semibold transition-all cursor-pointer"
+              title={`Conectado como ${currentUser.name} (${currentUser.role}). Clique para sair.`}
+            >
+              <LogOut size={14} className="text-slate-400" />
+              <span className="truncate max-w-[80px]">{currentUser.username}</span>
+            </button>
+          )}
         </div>
       </div>
 

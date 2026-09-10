@@ -10,6 +10,27 @@ COLLATE utf8mb4_unicode_ci;
 USE `arena_romano`;
 
 -- --------------------------------------------------------------------
+-- 0. TABELA DE USUÁRIOS DO SISTEMA (Autenticação, Gestão & Permissões)
+-- --------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` VARCHAR(64) NOT NULL,
+  `name` VARCHAR(150) NOT NULL,
+  `email` VARCHAR(150) NOT NULL,
+  `username` VARCHAR(80) NOT NULL,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `role` ENUM('admin', 'operador', 'gerente') NOT NULL DEFAULT 'admin',
+  `active` TINYINT(1) NOT NULL DEFAULT 1,
+  `avatar_url` VARCHAR(255) NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_users_email` (`email`),
+  UNIQUE KEY `uk_users_username` (`username`),
+  INDEX `idx_users_role` (`role`),
+  INDEX `idx_users_active` (`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------
 -- 1. TABELA DE PRODUTOS & CARDÁPIO (Com Suporte a Preços Progressivos)
 -- --------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `products` (
@@ -139,5 +160,23 @@ CREATE TABLE IF NOT EXISTS `daily_closings` (
   `closed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_closing_date` (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------
+-- 7. TABELA DE LOGS DE REQUISIÇÕES & AUDITORIA DO SERVIDOR
+-- --------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `system_logs` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `method` VARCHAR(10) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
+  `status_code` INT NOT NULL,
+  `duration_ms` INT NOT NULL,
+  `user_identifier` VARCHAR(100) NULL,
+  `client_ip` VARCHAR(45) NULL,
+  `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_logs_timestamp` (`timestamp`),
+  INDEX `idx_logs_status` (`status_code`),
+  INDEX `idx_logs_user` (`user_identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

@@ -3,9 +3,9 @@ import { INITIAL_PRODUCTS, INITIAL_SCHEDULES, generateInitialGames } from '../da
 import { calculateOptimalProductPrice } from '../utils/pricing';
 
 const STORAGE_KEYS = {
-  GAMES: 'arena_romano_games_v4',
-  PRODUCTS: 'arena_romano_products_v4',
-  SCHEDULES: 'arena_romano_schedules_v4',
+  GAMES: 'arena_romano_games_v5',
+  PRODUCTS: 'arena_romano_products_v5',
+  SCHEDULES: 'arena_romano_schedules_v5',
 };
 
 class ArenaRomanoStore {
