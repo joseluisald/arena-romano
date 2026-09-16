@@ -83,116 +83,120 @@ export const SchedulesView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 space-y-4 pb-24 sm:pb-12 text-slate-100">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-28 md:pb-12 text-slate-100">
       
-      {/* Clean Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#121218] p-3.5 sm:p-4 rounded-2xl border border-[#20202c]">
+      {/* Header Card */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-md shadow-black/20">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             Horários & Tarifas da Quadra
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Grade de horários, regras de pico e prevenção de conflitos.
+          <p className="text-xs text-slate-400 mt-1">
+            Defina horários padrão, preços de locação e acompanhe a ocupação da quadra.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreateModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white text-xs font-bold shadow-sm active-press cursor-pointer self-start sm:self-auto transition-all"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white text-xs font-bold shadow-md shadow-orange-500/25 active-press cursor-pointer self-start sm:self-auto transition-all"
         >
-          <Plus size={14} />
+          <Plus size={15} />
           <span>Novo Horário Padrão</span>
         </button>
       </div>
 
       {/* Single Court Rule Card */}
-      <div className="bg-gradient-to-r from-[#161622] via-[#12121a] to-[#0f0f15] text-white p-4 rounded-2xl border border-[#262638] shadow-lg flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[#1c1c2b] text-orange-400 border border-[#2e2e42]">
-            <Shield size={24} />
+      <div className="bg-gradient-to-r from-[#1E1216] via-[#141724] to-[#10131B] text-white p-5 rounded-2xl border border-orange-500/30 shadow-md shadow-black/30 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="p-3 rounded-2xl bg-[#FF6600]/15 text-[#FF6600] border border-[#FF6600]/30 shrink-0">
+            <Shield size={26} />
           </div>
           <div>
-            <h3 className="text-sm sm:text-base font-bold text-white">Arena Romano possui 1 Quadra Esportiva</h3>
-            <p className="text-xs text-slate-400">
-              O sistema monitora e bloqueia automaticamente qualquer sobreposição de jogos ou agendamentos na mesma data e horário.
+            <h3 className="text-sm sm:text-base font-extrabold text-white">Controle de Quadra Única (Arena Romano)</h3>
+            <p className="text-xs text-slate-300 mt-0.5">
+              O sistema previne conflitos de reserva e valida sobreposições de partidas no mesmo intervalo de horário.
             </p>
           </div>
         </div>
       </div>
 
       {/* Default Schedule Slots Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-slate-200">Grades Horárias Padrão & Valores</h2>
+      <div className="space-y-3.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+            Grades Horárias Padrão & Preços ({schedules.length})
+          </h2>
         </div>
 
         {schedules.length === 0 ? (
-          <div className="bg-[#111116] rounded-2xl p-8 border border-[#20202c] text-center max-w-md mx-auto my-4 space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#1a1a24] text-orange-400 flex items-center justify-center mx-auto border border-[#2a2a38]">
+          <div className="bg-[#10131B] rounded-2xl p-10 border border-[#1E2436] text-center max-w-md mx-auto my-4 space-y-3 shadow-md">
+            <div className="w-12 h-12 rounded-2xl bg-[#181D2B] text-orange-400 flex items-center justify-center mx-auto border border-[#23293D]">
               <Clock size={24} />
             </div>
             <h3 className="text-base font-bold text-white">Nenhum horário padrão cadastrado</h3>
             <p className="text-xs text-slate-400">
-              Cadastre as grades horárias e valores padrão da quadra para agilizar novos agendamentos.
+              Cadastre as faixas de horário mais comuns para agilizar o lançamento das partidas.
             </p>
             <button
               type="button"
               onClick={handleOpenCreateModal}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white text-xs font-bold shadow-md cursor-pointer transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white text-xs font-bold shadow-md cursor-pointer transition-all active:scale-95"
             >
               <Plus size={15} />
-              <span>Cadastrar Novo Horário</span>
+              <span>Cadastrar Horário</span>
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
             {schedules.map(slot => (
               <div
                 key={slot.id}
-                className={`bg-[#111116] rounded-2xl p-4 border transition-all hover:border-[#353545] flex flex-col justify-between ${
-                  slot.is_blocked ? 'border-[#22222c]/60 bg-[#0d0d12]/80 opacity-60' : 'border-[#22222c] shadow-lg'
+                className={`bg-[#10131B] rounded-2xl p-4 border transition-all hover:border-[#2B354F] hover:bg-[#131722] flex flex-col justify-between group ${
+                  slot.is_blocked ? 'border-[#1E2436]/60 bg-[#0C0E15]/80 opacity-60' : 'border-[#1E2436] shadow-sm'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-mono font-black text-lg sm:text-xl text-[#f27d26]">
+                    <span className="font-mono font-black text-xl text-[#FF6600]">
                       {slot.time}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#161620] text-slate-400 border border-[#262633]">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#181D2B] text-slate-300 border border-[#23293D]">
                       {slot.duration_minutes} min
                     </span>
                   </div>
 
                   {slot.label && (
-                    <span className="text-[11px] font-bold text-orange-400 block mb-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 block mb-2">
                       {slot.label}
                     </span>
                   )}
 
-                  <div className="my-2 p-2 rounded-xl bg-[#0c0c11] border border-[#22222c]">
-                    <span className="text-[10px] text-slate-400 font-bold block uppercase">Valor da Quadra</span>
-                    <span className="text-base font-black text-white">
+                  <div className="my-2.5 p-2.5 rounded-xl bg-[#0C0E15] border border-[#1A2030]">
+                    <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Tarifa Padrão</span>
+                    <span className="text-base font-black text-white font-mono">
                       {formatCurrency(slot.default_price)}
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#22222c] flex items-center justify-between">
-                  <span className={`text-[11px] font-medium ${slot.is_blocked ? 'text-amber-400' : 'text-emerald-400'}`}>
-                    {slot.is_blocked ? 'Bloqueado' : 'Disponível'}
+                <div className="pt-2.5 border-t border-[#1B2132] flex items-center justify-between mt-1">
+                  <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                    slot.is_blocked ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                  }`}>
+                    {slot.is_blocked ? 'Bloqueado' : 'Liberado'}
                   </span>
 
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleOpenEditModal(slot)}
-                      className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-[#1c1c27] border border-transparent hover:border-[#262638] cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-[#181D2B] cursor-pointer"
                       title="Editar horário"
                     >
                       <Edit3 size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteSlot(slot.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-rose-500/20 border border-transparent hover:border-[#262638] cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-rose-500/15 cursor-pointer"
                       title="Excluir horário"
                     >
                       <Trash2 size={14} />
@@ -205,149 +209,110 @@ export const SchedulesView: React.FC = () => {
         )}
       </div>
 
-      {/* Date Occupancy Visualizer */}
-      <div className="bg-[#111116] rounded-2xl p-4 sm:p-5 border border-[#22222c] shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h3 className="text-base font-bold text-white">Ocupação da Quadra por Data</h3>
-            <p className="text-xs text-slate-400">Visualize os jogos agendados para verificar a disponibilidade da quadra.</p>
-          </div>
-
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={e => setSelectedDate(e.target.value)}
-            className="text-xs sm:text-sm font-semibold text-white bg-[#0c0c11] px-3 py-1.5 rounded-xl border border-[#262638] focus:border-[#f27d26] outline-none"
-          />
-        </div>
-
-        <div className="space-y-2">
-          {gamesOnSelectedDate.length === 0 ? (
-            <div className="text-center py-6 text-xs text-slate-400 bg-[#0c0c11] rounded-xl border border-dashed border-[#22222c]">
-              Nenhum jogo cadastrado nesta data. A quadra está totalmente livre!
-            </div>
-          ) : (
-            gamesOnSelectedDate.map(game => (
-              <div
-                key={game.id}
-                className="p-3 bg-[#0c0c11] rounded-xl border border-[#22222c] flex items-center justify-between text-xs"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="font-mono font-bold text-sm text-[#f27d26] bg-[#161622] px-2.5 py-1 rounded-lg border border-[#262638]">
-                    {game.start_time} - {game.end_time}
-                  </span>
-                  <div>
-                    <span className="font-extrabold text-white block">{game.title}</span>
-                    <span className="text-slate-400">{game.players.length} jogadores • {game.status.toUpperCase()}</span>
-                  </div>
-                </div>
-
-                <span className="font-extrabold text-white">
-                  {formatCurrency(game.court_price)}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Create / Edit Slot Modal */}
+      {/* Add / Edit Slot Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
-          <div className="relative w-full max-w-md bg-[#111116] rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-[#272736] overflow-hidden text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
-            
-            {/* Mobile drag handle indicator */}
-            <div className="sm:hidden w-12 h-1 bg-slate-700/60 rounded-full mx-auto mt-2 mb-1" />
-
-            <div className="bg-[#161622] text-white px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#262638]">
-              <h2 className="text-base font-bold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-[#10131B] rounded-3xl shadow-2xl border border-[#1E2436] overflow-hidden text-slate-100">
+            <div className="bg-[#141824] px-5 py-4 flex items-center justify-between border-b border-[#1E2436]">
+              <h2 className="text-base sm:text-lg font-black tracking-tight text-white">
                 {editingSlot ? 'Editar Horário Padrão' : 'Novo Horário Padrão'}
               </h2>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
-                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active-press"
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1E2538] transition-colors cursor-pointer"
               >
-                <X size={19} />
+                <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveSlot} className="p-4 space-y-3.5 touch-pan-y">
-              <div className="grid grid-cols-2 gap-2.5">
+            <form onSubmit={handleSaveSlot} className="p-5 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Horário Início *</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1">
+                    Horário Início *
+                  </label>
                   <input
                     type="time"
                     required
                     value={time}
                     onChange={e => setTime(e.target.value)}
-                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-bold min-h-[40px]"
+                    className="w-full px-3 py-2 text-sm font-bold bg-[#0C0E15] text-white rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-medium text-slate-300 block mb-1">Duração *</label>
+                  <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1">
+                    Duração (minutos)
+                  </label>
                   <select
                     value={durationMinutes}
                     onChange={e => setDurationMinutes(Number(e.target.value))}
-                    className="w-full px-3 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] text-white focus:border-[#f27d26] outline-none font-medium min-h-[40px]"
+                    className="w-full px-3 py-2 text-sm font-semibold bg-[#0C0E15] text-white rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none"
                   >
-                    <option value={60}>60 minutos (1h)</option>
-                    <option value={90}>90 minutos (1h30)</option>
-                    <option value={120}>120 minutos (2h)</option>
+                    <option value={60}>60 minutos (1 hora)</option>
+                    <option value={90}>90 minutos (1h 30m)</option>
+                    <option value={120}>120 minutos (2 horas)</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-300 block mb-1">Valor Padrão da Quadra (R$) *</label>
-                <input
-                  type="number"
-                  step="10"
-                  required
-                  value={defaultPrice}
-                  onChange={e => setDefaultPrice(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-xl border border-[#272736] bg-[#0c0c11] focus:border-[#f27d26] outline-none font-bold text-[#f27d26] min-h-[40px] font-mono"
-                />
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1">
+                  Preço Base da Quadra (R$) *
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">R$</span>
+                  <input
+                    type="number"
+                    step="10"
+                    min="0"
+                    required
+                    value={defaultPrice}
+                    onChange={e => setDefaultPrice(Number(e.target.value))}
+                    className="w-full pl-9 pr-3 py-2 text-base font-black text-[#FF6600] bg-[#0C0E15] rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none font-mono"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-slate-300 block mb-1">Rótulo / Identificação</label>
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1">
+                  Rótulo ou Observação (Opcional)
+                </label>
                 <input
                   type="text"
-                  placeholder="Ex: Horário Nobre, Happy Hour..."
+                  placeholder="Ex: Horário Nobre / Pico, Mensalista..."
                   value={label}
                   onChange={e => setLabel(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-[#272736] bg-[#0c0c11] text-white placeholder:text-slate-500 focus:border-[#f27d26] outline-none min-h-[40px]"
+                  className="w-full px-3 py-2 text-xs bg-[#0C0E15] text-white rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none"
                 />
               </div>
 
               <div className="flex items-center gap-2 pt-1">
                 <input
                   type="checkbox"
-                  id="isBlockedCheck"
+                  id="blockedCheckbox"
                   checked={isBlocked}
                   onChange={e => setIsBlocked(e.target.checked)}
-                  className="h-4 w-4 rounded accent-[#f27d26] cursor-pointer"
+                  className="w-4 h-4 rounded text-[#FF6600] bg-[#0C0E15] border-[#1E2436] focus:ring-[#FF6600]"
                 />
-                <label htmlFor="isBlockedCheck" className="text-xs font-semibold text-slate-300 cursor-pointer">
-                  Bloquear este horário para manutenção / uso interno
+                <label htmlFor="blockedCheckbox" className="text-xs text-slate-300 font-semibold cursor-pointer">
+                  Bloquear este horário para novos agendamentos
                 </label>
               </div>
 
-              <div className="pt-3 border-t border-[#22222c] flex items-center justify-end gap-2 pb-safe">
+              <div className="pt-3 border-t border-[#1E2436] flex items-center justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-slate-300 hover:text-white font-semibold text-xs border border-[#272736] hover:bg-[#1c1c27] cursor-pointer min-h-[42px]"
+                  className="px-4 py-2 rounded-xl text-slate-300 hover:text-white text-xs font-semibold hover:bg-[#181D2B] border border-[#1E2436]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 cursor-pointer transition-all active-press flex items-center justify-center gap-2 flex-1 sm:flex-initial min-h-[42px]"
+                  className="px-5 py-2 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white text-xs font-bold shadow-md shadow-orange-500/25"
                 >
-                  <Check size={16} />
-                  <span>Salvar</span>
+                  Salvar Horário
                 </button>
               </div>
             </form>

@@ -6,7 +6,15 @@ import {
   Flame, 
   Clock, 
   ArrowRight, 
-  AlertCircle
+  CalendarDays,
+  Users,
+  DollarSign,
+  TrendingUp,
+  Wine,
+  ShieldCheck,
+  ChevronRight,
+  Plus,
+  MessageSquareShare
 } from 'lucide-react';
 
 interface DashboardViewProps {
@@ -24,7 +32,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const allGames = store.getGames();
   const todayGames = allGames.filter(g => g.date === selectedDate);
   const dailyStats = store.getDailyStats(selectedDate);
-  const liveGame = todayGames.find(g => g.status === 'em_andamento') || todayGames[0] || null;
+  const liveGame = todayGames.find(g => g.status === 'em_andamento') || null;
 
   // Format date header
   const getFormattedDateHeader = () => {
@@ -39,151 +47,259 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     const todayStr = new Date().toISOString().split('T')[0];
     const isToday = selectedDate === todayStr;
 
-    return `${isToday ? 'Hoje • ' : ''}${dayName}, ${d} ${monthName}`;
+    return {
+      isToday,
+      dayName,
+      formatted: `${dayName}, ${d} de ${monthName}`
+    };
   };
 
+  const dateInfo = getFormattedDateHeader();
+  const totalPlayersInDate = todayGames.reduce((acc, g) => acc + g.players.length, 0);
+  const totalPresentInDate = todayGames.reduce((acc, g) => acc + g.players.filter(p => p.is_present).length, 0);
+
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 space-y-4 pb-24 sm:pb-12 text-slate-100">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-28 md:pb-12 text-slate-100">
       
-      {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#121218] p-3.5 sm:p-4 rounded-2xl border border-[#20202c]">
+      {/* Top Banner: Date Bar & Quick Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-md shadow-black/30">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-              {getFormattedDateHeader()}
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              {dateInfo.formatted}
             </h1>
-            <span className="text-[11px] font-semibold text-orange-400 bg-orange-500/10 border border-orange-500/20 px-2 py-0.2 rounded-md">
-              Arena Romano
-            </span>
+            {dateInfo.isToday && (
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#FF6600] bg-[#FF6600]/15 border border-[#FF6600]/30 px-2.5 py-0.5 rounded-full">
+                Hoje
+              </span>
+            )}
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Controle de partidas, bar e comandas individuais.
+          <p className="text-xs text-slate-400 mt-1">
+            Painel diário de ocupação de quadras, comandas individuais e receitas do bar.
           </p>
         </div>
 
-        {/* Date Selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 font-medium hidden sm:inline">Data:</span>
+        {/* Date Selector Pill */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => {
+              const todayStr = new Date().toISOString().split('T')[0];
+              setSelectedDate(todayStr);
+            }}
+            className="text-xs font-bold px-3 py-2 rounded-xl bg-[#181D2B] hover:bg-[#20273A] text-slate-300 hover:text-white border border-[#23293D] transition-all cursor-pointer"
+          >
+            Hoje
+          </button>
+          
           <input
             type="date"
             value={selectedDate}
             onChange={e => setSelectedDate(e.target.value)}
-            className="text-xs font-semibold text-white bg-[#181822] hover:bg-[#20202e] px-3 py-1.5 rounded-xl border border-[#28283a] focus:border-[#f27d26] outline-none cursor-pointer"
+            className="text-xs font-bold text-white bg-[#181D2B] hover:bg-[#20273A] px-3.5 py-2 rounded-xl border border-[#23293D] focus:border-[#FF6600] outline-none transition-colors cursor-pointer"
           />
         </div>
       </div>
 
-      {/* Live Game Spotlight (Compact) */}
-      {liveGame && liveGame.status === 'em_andamento' && (
-        <div className="rounded-2xl bg-[#15151f] text-white p-3.5 sm:p-4 border border-orange-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#f27d26] text-white text-[10px] font-bold uppercase">
-                <Flame size={11} /> Em Andamento
-              </span>
-              <span className="text-xs font-mono font-bold text-slate-300">
-                {liveGame.start_time} - {liveGame.end_time}
-              </span>
-            </div>
-            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
-              {liveGame.title}
-            </h2>
-            <div className="flex items-center gap-3 text-xs text-slate-300 mt-1">
-              <span>{liveGame.players.filter(p => p.is_present).length} presentes</span>
-              <span>•</span>
-              <span>Bar: <strong className="text-[#f27d26]">{formatCurrency(liveGame.players.reduce((s, p) => s + p.total_consumption, 0))}</strong></span>
+      {/* KPI Metric Summary Bento Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* Total Revenue */}
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Receita Total
+            </span>
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <DollarSign size={16} />
             </div>
           </div>
+          <div className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            {formatCurrency(dailyStats.total_revenue)}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
+            <span className="text-emerald-400 font-bold">{formatCurrency(dailyStats.total_paid)}</span> recebido
+          </p>
+        </div>
 
-          <button
-            onClick={() => onOpenGame(liveGame.id)}
-            className="px-4 py-2 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-sm flex items-center justify-center gap-1.5 cursor-pointer self-start sm:self-auto"
-          >
-            <span>Ver Comandas</span>
-            <ArrowRight size={14} />
-          </button>
+        {/* Bar & Products */}
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Consumo do Bar
+            </span>
+            <div className="p-2 rounded-xl bg-orange-500/10 text-[#FF6600] border border-orange-500/20">
+              <Wine size={16} />
+            </div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            {formatCurrency(dailyStats.products_revenue)}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Bebidas, carnes e petiscos
+          </p>
+        </div>
+
+        {/* Games Count */}
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Partidas
+            </span>
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+              <CalendarDays size={16} />
+            </div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            {todayGames.length}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Quadra: {formatCurrency(dailyStats.court_revenue)}
+          </p>
+        </div>
+
+        {/* Players Attendance */}
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Jogadores
+            </span>
+            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              <Users size={16} />
+            </div>
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-white font-mono tracking-tight">
+            {totalPresentInDate} <span className="text-slate-500 text-sm font-normal">/ {totalPlayersInDate}</span>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Presentes confirmados
+          </p>
+        </div>
+      </div>
+
+      {/* Live Game Spotlight Featured Card */}
+      {liveGame && (
+        <div className="relative rounded-2xl bg-gradient-to-r from-[#211116] via-[#1A121A] to-[#12141F] border border-orange-500/40 p-5 sm:p-6 shadow-xl shadow-black/40 overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FF6600] text-white text-[11px] font-black uppercase tracking-wider shadow-sm">
+                  <Flame size={13} className="animate-bounce" /> Partida em Andamento
+                </span>
+                <span className="font-mono font-bold text-xs bg-black/60 px-2.5 py-1 rounded-lg border border-orange-500/30 text-orange-200">
+                  {liveGame.start_time} - {liveGame.end_time}
+                </span>
+              </div>
+
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                {liveGame.title}
+              </h2>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300">
+                <span className="flex items-center gap-1.5">
+                  <Users size={14} className="text-slate-400" />
+                  <strong className="text-white">{liveGame.players.filter(p => p.is_present).length}</strong> de {liveGame.players.length} presentes
+                </span>
+                <span className="text-slate-600">•</span>
+                <span className="flex items-center gap-1.5">
+                  <Wine size={14} className="text-[#FF6600]" />
+                  Bar da Partida: <strong className="text-[#FF6600] font-mono text-sm">{formatCurrency(liveGame.players.reduce((s, p) => s + p.total_consumption, 0))}</strong>
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onOpenGame(liveGame.id)}
+              className="px-6 py-3 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white font-extrabold text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer transition-all active-press shrink-0"
+            >
+              <span>Abrir Comandas da Partida</span>
+              <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Games List for Selected Date */}
-      <div className="space-y-2.5">
-        <h2 className="text-sm font-bold text-white tracking-tight">
-          Partidas Cadastradas ({todayGames.length})
-        </h2>
+      {/* Today's Games Grid */}
+      <div className="space-y-3.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base sm:text-lg font-black text-white tracking-tight flex items-center gap-2">
+            <span>Jogos Agendados & Histórico</span>
+            <span className="text-xs font-bold text-slate-400 bg-[#181D2B] px-2.5 py-0.5 rounded-full border border-[#23293D]">
+              {todayGames.length}
+            </span>
+          </h2>
+        </div>
 
         {todayGames.length === 0 ? (
-          <div className="bg-[#121218] rounded-xl p-6 text-center border border-dashed border-[#20202c]">
-            <p className="text-xs text-slate-400">
-              Nenhuma partida nesta data. Use os botões <strong className="text-emerald-400">WhatsApp</strong> ou <strong className="text-orange-400">Novo Jogo</strong> no topo para cadastrar.
+          <div className="bg-[#10131B] rounded-2xl p-8 sm:p-12 text-center border border-dashed border-[#1E2436]">
+            <div className="w-12 h-12 rounded-2xl bg-[#181D2B] border border-[#23293D] flex items-center justify-center mx-auto mb-3 text-slate-400">
+              <CalendarDays size={24} />
+            </div>
+            <h3 className="text-sm font-bold text-white mb-1">Nenhum jogo nesta data</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto mb-4">
+              Você pode importar rapidamente uma lista copiada do grupo do WhatsApp ou criar um novo jogo manual.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {todayGames.map(game => {
               const gameConsumption = game.players.reduce((sum, p) => sum + p.total_consumption, 0);
               const presentCount = game.players.filter(p => p.is_present).length;
+              const isLive = game.status === 'em_andamento';
+              const isFinished = game.status === 'finalizado';
 
               return (
                 <div
                   key={game.id}
                   onClick={() => onOpenGame(game.id)}
-                  className={`rounded-xl p-3 border transition-all hover:border-[#353548] cursor-pointer flex flex-col justify-between ${
-                    game.status === 'em_andamento'
-                      ? 'bg-[#15131b] border-orange-500/50 shadow-sm'
-                      : 'bg-[#121218] border-[#20202c]'
+                  className={`rounded-2xl p-4 border transition-all cursor-pointer flex flex-col justify-between group ${
+                    isLive
+                      ? 'bg-[#15141D] border-orange-500/40 hover:border-orange-500/70 shadow-md shadow-orange-500/5'
+                      : 'bg-[#10131B] border-[#1E2436] hover:border-[#2B354F] hover:bg-[#131722]'
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <Clock size={13} className="text-orange-400" />
-                        <span className="font-mono font-bold text-xs text-white">
-                          {game.start_time}
-                        </span>
-                        <span className="text-[10px] text-slate-500">
-                          ({game.duration_minutes || 60}m)
+                    {/* Header: Time & Status */}
+                    <div className="flex items-center justify-between mb-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-1 font-mono font-bold text-xs bg-[#181D2B] px-2.5 py-1 rounded-lg border border-[#23293D] text-slate-200">
+                          <Clock size={12} className="text-[#FF6600]" />
+                          {game.start_time} - {game.end_time}
                         </span>
                       </div>
 
-                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
-                        game.status === 'em_andamento'
-                          ? 'bg-orange-500 text-white'
-                          : game.status === 'finalizado'
-                          ? 'bg-emerald-500/15 text-emerald-300'
-                          : 'bg-sky-500/15 text-sky-300'
+                      <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${
+                        isLive
+                          ? 'bg-[#FF6600]/15 text-[#FF6600] border-[#FF6600]/30 animate-pulse'
+                          : isFinished
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                          : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
                       }`}>
-                        {game.status === 'em_andamento' ? 'Em Andamento' : game.status === 'finalizado' ? 'Finalizado' : 'Agendado'}
+                        {isLive ? 'Ao Vivo' : isFinished ? 'Finalizado' : 'Agendado'}
                       </span>
                     </div>
 
-                    <h3 className="text-sm font-bold text-white truncate">
+                    <h3 className="font-extrabold text-white text-base group-hover:text-[#FF6600] transition-colors line-clamp-1 mb-2">
                       {game.title}
                     </h3>
 
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#1e1e28] text-xs">
-                      <span className="text-[11px] text-slate-400">
-                        {presentCount}/{game.players.length} presentes
-                      </span>
-                      <span className="font-bold text-[#f27d26] font-mono text-xs">
-                        {formatCurrency(gameConsumption)}
-                      </span>
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 py-2 border-y border-[#1B2132] my-2">
+                      <div>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Presença</span>
+                        <span className="font-bold text-white font-mono">{presentCount} / {game.players.length}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-slate-400 uppercase font-semibold block">Consumo Bar</span>
+                        <span className="font-bold text-[#FF6600] font-mono">{formatCurrency(gameConsumption)}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="mt-2 pt-2 border-t border-[#1e1e28] flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400">
-                      Quadra: {formatCurrency(game.court_price)}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onOpenGame(game.id);
-                      }}
-                      className="px-2.5 py-1 rounded-lg bg-[#1a1a24] hover:bg-[#f27d26] text-slate-200 hover:text-white font-bold text-xs transition-colors flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Abrir</span>
-                      <ArrowRight size={12} />
-                    </button>
+                  {/* Footer Action */}
+                  <div className="flex items-center justify-between text-xs pt-1 text-slate-400 group-hover:text-white transition-colors">
+                    <span className="font-semibold text-[11px]">Gerenciar Comandas</span>
+                    <ChevronRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               );
@@ -192,15 +308,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         )}
       </div>
 
-      {/* Pending Balances Alert */}
-      {dailyStats.total_pending > 0 && (
-        <div className="bg-[#18130e] rounded-xl p-3 border border-amber-900/40 text-amber-200 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
-            <AlertCircle size={16} className="text-amber-400 shrink-0" />
-            <span>Valores Pendentes no Caixa Hoje: <strong className="text-amber-100">{formatCurrency(dailyStats.total_pending)}</strong></span>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -8,7 +8,6 @@ import {
   Minus, 
   Trash2, 
   CheckCircle2, 
-  Clock, 
   Beer, 
   UtensilsCrossed, 
   Droplets, 
@@ -38,7 +37,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
   const [activeMode, setActiveMode] = useState<'produtos' | 'avulso'>('produtos');
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'todas'>('todas');
   
-  // Custom / Avulso item state (e.g. Churrasco R$ 30)
+  // Custom / Avulso item state
   const [customItemName, setCustomItemName] = useState('Churrasco');
   const [customItemPrice, setCustomItemPrice] = useState<number | string>(30);
   const [customItemQty, setCustomItemQty] = useState(1);
@@ -88,7 +87,6 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
     store.addCustomConsumption(game.id, player.id, name, priceNum, qty);
     showToast(`+${qty}x ${name} (${formatCurrency(priceNum * qty)})`);
 
-    // Reset or keep sensible default
     setCustomItemName('Churrasco');
     setCustomItemPrice(30);
     setCustomItemQty(1);
@@ -142,15 +140,15 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
     lines.push(`💰 *TOTAL DA COMANDA: ${formatCurrency(player.total_consumption)}*`);
     lines.push(`📌 *Status:* ${player.is_paid ? `✅ PAGO (${player.payment_method?.toUpperCase()})` : '⏳ PENDENTE'}`);
     lines.push(``);
-    lines.push(`_Arena Romano • Quadra Esportiva_`);
+    lines.push(`_Arena Romano • Sistema de Comandas Digitais_`);
 
     const encoded = encodeURIComponent(lines.join('\n'));
     window.open(`https://wa.me/?text=${encoded}`, '_blank');
   };
 
   const quickCustomSuggestions = [
-    { name: 'Churrasco', price: 30 },
-    { name: 'Rateio Churrasco', price: 35 },
+    { name: 'Churrasco Completo', price: 35 },
+    { name: 'Rateio Churrasco', price: 30 },
     { name: 'Saco de Gelo', price: 15 },
     { name: 'Carvão / Espeto', price: 20 },
     { name: 'Taxa Convidado', price: 10 },
@@ -158,36 +156,36 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-sm overflow-hidden">
-      <div className="relative w-full max-w-xl bg-[#0e0e13] rounded-t-2xl sm:rounded-2xl shadow-2xl border-t sm:border border-[#22222f] overflow-hidden max-h-[94vh] sm:max-h-[90vh] flex flex-col text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
+      <div className="relative w-full max-w-xl bg-[#10131B] rounded-t-3xl sm:rounded-3xl shadow-2xl border-t sm:border border-[#1E2436] overflow-hidden max-h-[94vh] sm:max-h-[90vh] flex flex-col text-slate-100 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200">
         
-        {/* Mobile drag handle indicator */}
+        {/* Mobile drag handle */}
         <div className="sm:hidden w-12 h-1 bg-slate-700/60 rounded-full mx-auto mt-2 mb-1" />
 
-        {/* Toast alert */}
+        {/* Toast notification */}
         {toastMessage && (
-          <div className="absolute top-12 left-1/2 -translate-x-1/2 z-50 bg-[#f27d26] text-white px-4 py-2 rounded-full shadow-xl text-xs font-bold flex items-center gap-1.5 animate-in fade-in slide-in-from-top-2 border border-orange-400/40">
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 z-50 bg-[#FF6600] text-white px-4 py-2 rounded-full shadow-xl text-xs font-bold flex items-center gap-1.5 animate-in fade-in slide-in-from-top-2 border border-orange-400/40">
             <Sparkles size={14} />
             <span>{toastMessage}</span>
           </div>
         )}
 
         {/* Modal Header */}
-        <div className="bg-[#14141d] px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#20202c]">
+        <div className="bg-[#141824] px-5 py-4 flex items-center justify-between border-b border-[#1E2436]">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-orange-500/20 border border-orange-500/30 text-orange-400 font-black text-base flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#8E1632] to-[#FF6600] text-white font-black text-base flex items-center justify-center shrink-0 shadow-md">
               {player.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">{player.name}</h2>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-base sm:text-lg font-black text-white tracking-tight truncate">{player.name}</h2>
                 {player.raw_tag && (
-                  <span className="px-1.5 py-0.2 rounded bg-orange-500/10 text-orange-400 text-[10px] font-bold border border-orange-500/20 shrink-0">
+                  <span className="px-2 py-0.5 rounded-md bg-[#FF6600]/15 text-orange-400 text-[10px] font-bold border border-[#FF6600]/30 shrink-0">
                     {player.raw_tag}
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-400 truncate">
-                {game.title} • {player.is_present ? '🟢 Presente' : '⚪ Ausente'}
+              <p className="text-xs text-slate-400 truncate">
+                {game.title} • {player.is_present ? '🟢 Em quadra' : '⚪ Ausente'}
               </p>
             </div>
           </div>
@@ -195,38 +193,38 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={handleShareWhatsApp}
-              className="p-2 sm:p-1.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white border border-[#25D366]/30 transition-colors cursor-pointer active-press"
-              title="Compartilhar no WhatsApp"
+              className="p-2 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366] text-[#25D366] hover:text-white border border-[#25D366]/30 transition-colors cursor-pointer active-press"
+              title="Compartilhar resumo no WhatsApp"
             >
-              <Share2 size={17} />
+              <Share2 size={16} />
             </button>
             <button
               onClick={onClose}
-              className="p-2 sm:p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer active-press"
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1E2538] transition-colors cursor-pointer active-press"
             >
-              <X size={19} />
+              <X size={18} />
             </button>
           </div>
         </div>
 
-        {/* Total & Payment Compact Bar */}
-        <div className="bg-[#111118] px-4 py-2.5 border-b border-[#20202c] flex items-center justify-between gap-2">
+        {/* Total & Quick Payment Bar */}
+        <div className="bg-[#0C0E15] px-5 py-3 border-b border-[#1E2436] flex items-center justify-between gap-3">
           <div>
-            <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total da Comanda</span>
-            <span className="text-xl sm:text-2xl font-black text-[#f27d26] font-mono">
+            <span className="text-[10px] text-slate-400 uppercase font-black tracking-wider block">Total Acumulado</span>
+            <span className="text-2xl font-black text-[#FF6600] font-mono">
               {formatCurrency(player.total_consumption)}
             </span>
           </div>
 
           {/* Quick Payment Mode Selector */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => handleTogglePayment('pix')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 border cursor-pointer active-press min-h-[38px] ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer active-press min-h-[38px] ${
                 player.is_paid && player.payment_method === 'pix'
                   ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                  : 'bg-[#181822] text-slate-300 border-[#272736] hover:bg-[#20202c]'
+                  : 'bg-[#181D2B] text-slate-300 border-[#23293D] hover:bg-[#1E2538]'
               }`}
             >
               <CheckCircle2 size={14} /> Pix
@@ -234,10 +232,10 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
             <button
               type="button"
               onClick={() => handleTogglePayment('dinheiro')}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 border cursor-pointer active-press min-h-[38px] ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer active-press min-h-[38px] ${
                 player.is_paid && player.payment_method === 'dinheiro'
                   ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                  : 'bg-[#181822] text-slate-300 border-[#272736] hover:bg-[#20202c]'
+                  : 'bg-[#181D2B] text-slate-300 border-[#23293D] hover:bg-[#1E2538]'
               }`}
             >
               <DollarSign size={14} /> Dinheiro
@@ -245,10 +243,10 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
             <button
               type="button"
               onClick={() => handleTogglePayment('cartao')}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer active-press min-h-[38px] ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer active-press min-h-[38px] ${
                 player.is_paid && player.payment_method === 'cartao'
                   ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                  : 'bg-[#181822] text-slate-300 border-[#272736] hover:bg-[#20202c]'
+                  : 'bg-[#181D2B] text-slate-300 border-[#23293D] hover:bg-[#1E2538]'
               }`}
             >
               Cartão
@@ -256,15 +254,15 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
           </div>
         </div>
 
-        {/* Tab Selector: Produtos do Bar VS Item Avulso / Churrasco */}
-        <div className="px-4 pt-2.5 flex items-center gap-2 border-b border-[#20202c] pb-2 bg-[#0e0e13] overflow-x-auto scrollbar-none">
+        {/* Mode Selector Tabs */}
+        <div className="px-5 pt-3 flex items-center gap-2 border-b border-[#1E2436] pb-2.5 bg-[#10131B]">
           <button
             type="button"
             onClick={() => setActiveMode('produtos')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap active-press ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap active-press ${
               activeMode === 'produtos'
-                ? 'bg-[#f27d26] text-white shadow-sm'
-                : 'bg-[#14141d] text-slate-400 hover:text-slate-200 border border-[#222230]'
+                ? 'bg-[#FF6600] text-white shadow-sm'
+                : 'bg-[#141824] text-slate-400 hover:text-slate-200 border border-[#1E2538]'
             }`}
           >
             <Package size={15} />
@@ -274,10 +272,10 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveMode('avulso')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap active-press ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap active-press ${
               activeMode === 'avulso'
-                ? 'bg-[#f27d26] text-white shadow-sm'
-                : 'bg-[#14141d] text-orange-400 hover:text-orange-300 border border-orange-500/30'
+                ? 'bg-[#FF6600] text-white shadow-sm'
+                : 'bg-[#141824] text-orange-400 hover:text-orange-300 border border-[#FF6600]/30'
             }`}
           >
             <UtensilsCrossed size={15} />
@@ -286,21 +284,21 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
         </div>
 
         {/* Scrollable Content */}
-        <div className="p-3 sm:p-4 overflow-y-auto space-y-4 flex-1 touch-pan-y">
+        <div className="p-4 sm:p-5 overflow-y-auto space-y-4 flex-1 touch-pan-y">
           
-          {/* TAB 1: ITEM AVULSO / CHURRASCO / RATEIO */}
+          {/* TAB: ITEM AVULSO / CHURRASCO / RATEIO */}
           {activeMode === 'avulso' && (
-            <div className="bg-[#14141d] p-3.5 sm:p-4 rounded-2xl border border-orange-500/30 space-y-3.5">
+            <div className="bg-[#141824] p-4 rounded-2xl border border-orange-500/30 space-y-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <UtensilsCrossed size={14} /> Adicionar Despesa Avulsa / Churrasco
+                  <UtensilsCrossed size={14} /> Lançar Despesa Avulsa ou Churrasco
                 </span>
-                <span className="text-[11px] text-slate-400">Qualquer valor</span>
+                <span className="text-[11px] text-slate-400">Qualquer valor personalizado</span>
               </div>
 
               {/* Quick suggestions */}
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-semibold block mb-1.5">
+                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block mb-1.5">
                   Sugestões Rápidas:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -314,8 +312,8 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       }}
                       className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer active-press ${
                         customItemName === sug.name
-                          ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
-                          : 'bg-[#1c1c28] text-slate-300 border-[#2a2a3c] hover:bg-[#252535]'
+                          ? 'bg-[#FF6600]/20 text-orange-300 border-[#FF6600]/40'
+                          : 'bg-[#0C0E15] text-slate-300 border-[#1E2436] hover:bg-[#181D2B]'
                       }`}
                     >
                       {sug.name} (R$ {sug.price})
@@ -326,7 +324,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
               {/* Custom Form */}
               <form onSubmit={handleAddCustomExpense} className="space-y-3 pt-1">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-[11px] font-semibold text-slate-300 block mb-1">
                       Descrição / Nome do Item:
@@ -336,7 +334,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       value={customItemName}
                       onChange={e => setCustomItemName(e.target.value)}
                       placeholder="Ex: Churrasco, Gelo, Entrada..."
-                      className="w-full px-3.5 py-2.5 text-xs font-semibold bg-[#0a0a0f] text-white rounded-xl border border-[#2a2a3c] focus:border-[#f27d26] outline-none"
+                      className="w-full px-3.5 py-2.5 text-xs font-semibold bg-[#0C0E15] text-white rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none"
                     />
                   </div>
 
@@ -353,7 +351,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                         value={customItemPrice}
                         onChange={e => setCustomItemPrice(e.target.value)}
                         placeholder="30,00"
-                        className="w-full pl-10 pr-3.5 py-2.5 text-xs font-bold bg-[#0a0a0f] text-white rounded-xl border border-[#2a2a3c] focus:border-[#f27d26] outline-none font-mono"
+                        className="w-full pl-10 pr-3.5 py-2.5 text-xs font-bold bg-[#0C0E15] text-white rounded-xl border border-[#1E2436] focus:border-[#FF6600] outline-none font-mono"
                       />
                     </div>
                   </div>
@@ -361,8 +359,8 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
                 <div className="flex items-center justify-between gap-3 pt-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-slate-400 font-semibold">Qtd:</span>
-                    <div className="flex items-center border border-[#2a2a3c] rounded-xl bg-[#0a0a0f]">
+                    <span className="text-xs text-slate-400 font-bold">Qtd:</span>
+                    <div className="flex items-center border border-[#1E2436] rounded-xl bg-[#0C0E15]">
                       <button
                         type="button"
                         onClick={() => setCustomItemQty(Math.max(1, customItemQty - 1))}
@@ -370,7 +368,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       >
                         -
                       </button>
-                      <span className="px-2 text-xs font-mono font-bold text-white">{customItemQty}</span>
+                      <span className="px-2.5 text-xs font-mono font-black text-white">{customItemQty}</span>
                       <button
                         type="button"
                         onClick={() => setCustomItemQty(customItemQty + 1)}
@@ -383,7 +381,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
                   <button
                     type="submit"
-                    className="px-4 py-2.5 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 active-press cursor-pointer flex items-center gap-1.5 ml-auto min-h-[40px]"
+                    className="px-5 py-2.5 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white font-bold text-xs shadow-md shadow-orange-500/25 active-press cursor-pointer flex items-center gap-1.5 ml-auto min-h-[40px]"
                   >
                     <Plus size={15} />
                     <span>
@@ -395,7 +393,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
             </div>
           )}
 
-          {/* TAB 2: PRODUTOS DO BAR */}
+          {/* TAB: PRODUTOS DO BAR */}
           {activeMode === 'produtos' && (
             <div className="space-y-3">
               {/* Category selector */}
@@ -404,10 +402,10 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer active-press shrink-0 ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer active-press shrink-0 ${
                       selectedCategory === cat.id
-                        ? 'bg-[#f27d26] text-white shadow-sm'
-                        : 'bg-[#14141d] text-slate-400 hover:text-slate-200 border border-[#222230]'
+                        ? 'bg-[#FF6600] text-white shadow-sm'
+                        : 'bg-[#141824] text-slate-400 hover:text-slate-200 border border-[#1E2538]'
                     }`}
                   >
                     {cat.icon}
@@ -416,19 +414,19 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                 ))}
               </div>
 
-              {/* Products List (Compact) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {/* Products List */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {filteredProducts.map(product => {
                   const hasTiers = product.price_tiers && product.price_tiers.length > 1;
 
                   return (
                     <div
                       key={product.id}
-                      className="bg-[#14141d] p-3 rounded-2xl border border-[#222230] flex flex-col justify-between hover:border-[#303042] transition-colors"
+                      className="bg-[#141824] p-3.5 rounded-2xl border border-[#1E2538] flex flex-col justify-between hover:border-[#2B354F] transition-colors"
                     >
                       <div className="flex items-center justify-between gap-1 mb-1.5">
                         <span className="text-xs sm:text-sm font-bold text-white truncate">{product.name}</span>
-                        <span className="text-xs sm:text-sm font-black text-[#f27d26] font-mono shrink-0">
+                        <span className="text-xs sm:text-sm font-black text-[#FF6600] font-mono shrink-0">
                           {formatCurrency(product.unit_price)}
                         </span>
                       </div>
@@ -436,19 +434,19 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       {hasTiers && (
                         <div className="flex flex-wrap items-center gap-1 mb-2.5">
                           {product.price_tiers.map(t => (
-                            <span key={t.quantity} className="text-[10px] bg-orange-500/10 text-orange-300 px-1.5 py-0.5 rounded-md border border-orange-500/20 font-medium">
+                            <span key={t.quantity} className="text-[10px] bg-[#FF6600]/15 text-orange-300 px-1.5 py-0.5 rounded-md border border-[#FF6600]/25 font-bold">
                               {t.quantity} un = {formatCurrency(t.price)}
                             </span>
                           ))}
                         </div>
                       )}
 
-                      {/* Fast Action Buttons with Touch Padding */}
-                      <div className="flex items-center gap-1.5 pt-2 border-t border-[#20202c]">
+                      {/* Fast Action Buttons */}
+                      <div className="flex items-center gap-1.5 pt-2 border-t border-[#1E2538]">
                         <button
                           type="button"
                           onClick={() => handleQuickAddProduct(product, 1)}
-                          className="flex-1 py-2 bg-[#1e1e2c] hover:bg-[#f27d26] text-slate-200 hover:text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 active-press min-h-[38px]"
+                          className="flex-1 py-2 bg-[#0C0E15] hover:bg-[#FF6600] text-slate-200 hover:text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 active-press min-h-[38px] border border-[#1E2436]"
                         >
                           +1
                         </button>
@@ -456,7 +454,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleQuickAddProduct(product, 2)}
-                            className="flex-1 py-2 bg-orange-500/10 hover:bg-orange-500 text-orange-300 hover:text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 border border-orange-500/20 active-press min-h-[38px]"
+                            className="flex-1 py-2 bg-orange-500/15 hover:bg-[#FF6600] text-orange-300 hover:text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 border border-orange-500/30 active-press min-h-[38px]"
                           >
                             +2
                           </button>
@@ -465,7 +463,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleQuickAddProduct(product, 4)}
-                            className="flex-1 py-2 bg-[#f27d26] hover:bg-[#ff8a3d] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 active-press min-h-[38px]"
+                            className="flex-1 py-2 bg-[#FF6600] hover:bg-[#FF7B1A] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-0.5 active-press min-h-[38px]"
                           >
                             +4
                           </button>
@@ -476,7 +474,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                             setSelectedProductForCustomQty(product);
                             setCustomQty(1);
                           }}
-                          className="px-3 py-2 bg-[#1e1e2c] hover:bg-[#28283a] text-slate-400 hover:text-slate-200 rounded-xl text-xs font-bold transition-colors cursor-pointer active-press min-h-[38px]"
+                          className="px-3 py-2 bg-[#0C0E15] hover:bg-[#181D2B] text-slate-400 hover:text-slate-200 rounded-xl text-xs font-bold transition-colors cursor-pointer active-press min-h-[38px] border border-[#1E2436]"
                           title="Outra quantidade"
                         >
                           +qtd
@@ -489,7 +487,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
               {/* Custom Quantity popup if triggered */}
               {selectedProductForCustomQty && (
-                <div className="p-3 bg-[#181824] border border-orange-500/40 rounded-2xl space-y-2 text-slate-200 animate-in fade-in">
+                <div className="p-3.5 bg-[#181D2B] border border-orange-500/40 rounded-2xl space-y-2.5 text-slate-200 animate-in fade-in">
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span>Quantidade para: <strong className="text-white">{selectedProductForCustomQty.name}</strong></span>
                     <button onClick={() => setSelectedProductForCustomQty(null)} className="text-slate-400 hover:text-white p-1">
@@ -497,7 +495,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                     </button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center border border-[#2a2a3c] rounded-xl bg-[#0c0c11]">
+                    <div className="flex items-center border border-[#23293D] rounded-xl bg-[#0C0E15]">
                       <button
                         type="button"
                         onClick={() => setCustomQty(Math.max(1, customQty - 1))}
@@ -510,7 +508,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                         min="1"
                         value={customQty}
                         onChange={e => setCustomQty(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-12 text-center text-xs font-bold border-none outline-none bg-transparent text-white"
+                        className="w-12 text-center text-xs font-bold border-none outline-none bg-transparent text-white font-mono"
                       />
                       <button
                         type="button"
@@ -520,13 +518,13 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                         +
                       </button>
                     </div>
-                    <span className="text-xs text-[#f27d26] font-bold font-mono">
+                    <span className="text-xs text-[#FF6600] font-black font-mono">
                       = {formatCurrency(calculateOptimalProductPrice(selectedProductForCustomQty, customQty).total)}
                     </span>
                     <button
                       type="button"
                       onClick={handleAddCustomQtyProduct}
-                      className="ml-auto px-3.5 py-2 bg-[#f27d26] text-white rounded-xl text-xs font-bold cursor-pointer active-press"
+                      className="ml-auto px-4 py-2 bg-[#FF6600] text-white rounded-xl text-xs font-bold cursor-pointer active-press"
                     >
                       Adicionar {customQty}x
                     </button>
@@ -537,25 +535,25 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
           )}
 
           {/* Section: Player's Consumed Items List */}
-          <div className="pt-2 border-t border-[#20202c]">
+          <div className="pt-2 border-t border-[#1E2436]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
-                <ReceiptText size={13} className="text-orange-400" /> Itens Lançados na Comanda ({player.consumptions.length})
+              <span className="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <ReceiptText size={14} className="text-[#FF6600]" /> Itens Lançados na Comanda ({player.consumptions.length})
               </span>
             </div>
 
             {player.consumptions.length === 0 ? (
-              <div className="text-center py-5 bg-[#111118] rounded-2xl border border-dashed border-[#20202c] text-slate-400 text-xs">
-                Nenhum item lançado ainda. Toque nos botões do cardápio acima.
+              <div className="text-center py-6 bg-[#0C0E15] rounded-2xl border border-dashed border-[#1E2436] text-slate-400 text-xs">
+                Nenhum item lançado ainda. Toque nos botões do cardápio acima para adicionar.
               </div>
             ) : (
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {player.consumptions.map(consumption => (
                   <div
                     key={consumption.id}
-                    className="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-[#14141d] border border-[#20202c] text-xs"
+                    className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-[#141824] border border-[#1E2538] text-xs"
                   >
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
                       <span className="font-mono text-slate-500 text-[10px] shrink-0">
                         {consumption.time_formatted}
                       </span>
@@ -569,12 +567,12 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       </div>
                     </div>
 
-                    {/* Quantity Stepper with Large Hit Targets */}
-                    <div className="flex items-center gap-1 bg-[#1c1c28] px-1 py-0.5 rounded-xl border border-[#28283a]">
+                    {/* Quantity Stepper */}
+                    <div className="flex items-center gap-1 bg-[#0C0E15] px-1 py-0.5 rounded-xl border border-[#1E2436]">
                       <button
                         type="button"
                         onClick={() => handleUpdateQuantity(consumption.id, consumption.quantity, -1)}
-                        className="p-2 text-slate-400 hover:text-rose-400 rounded-lg active-press min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg active-press min-h-[30px] min-w-[30px] flex items-center justify-center"
                       >
                         <Minus size={13} />
                       </button>
@@ -584,7 +582,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                       <button
                         type="button"
                         onClick={() => handleUpdateQuantity(consumption.id, consumption.quantity, 1)}
-                        className="p-2 text-slate-400 hover:text-emerald-400 rounded-lg active-press min-h-[32px] min-w-[32px] flex items-center justify-center"
+                        className="p-1.5 text-slate-400 hover:text-emerald-400 rounded-lg active-press min-h-[30px] min-w-[30px] flex items-center justify-center"
                       >
                         <Plus size={13} />
                       </button>
@@ -592,7 +590,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
 
                     {/* Line Total */}
                     <div className="text-right w-16 shrink-0">
-                      <span className="font-bold text-[#f27d26] text-xs font-mono">
+                      <span className="font-black text-[#FF6600] text-xs font-mono">
                         {formatCurrency(consumption.calculated_total_price)}
                       </span>
                     </div>
@@ -601,7 +599,7 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveConsumption(consumption.id)}
-                      className="p-2 text-slate-500 hover:text-rose-400 transition-colors cursor-pointer active-press"
+                      className="p-1.5 text-slate-500 hover:text-rose-400 transition-colors cursor-pointer active-press"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -613,18 +611,18 @@ export const PlayerComandaModal: React.FC<PlayerComandaModalProps> = ({
         </div>
 
         {/* Modal Sticky Footer */}
-        <div className="bg-[#14141d] px-4 py-3 border-t border-[#20202c] flex items-center justify-between pb-safe">
+        <div className="bg-[#141824] px-5 py-3.5 border-t border-[#1E2436] flex items-center justify-between pb-safe">
           <div className="text-xs">
             <span className="text-slate-400">Status: </span>
             <span className={`font-bold ${player.is_paid ? 'text-emerald-400' : 'text-amber-400'}`}>
-              {player.is_paid ? `Pago (${player.payment_method?.toUpperCase()})` : 'Pendente'}
+              {player.is_paid ? `Pago (${player.payment_method?.toUpperCase()})` : 'Pendente de Pagamento'}
             </span>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] text-white font-bold text-xs shadow-md shadow-orange-500/20 active-press cursor-pointer min-h-[38px] flex items-center justify-center"
+            className="px-6 py-2.5 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] text-white font-bold text-xs shadow-md shadow-orange-500/25 active-press cursor-pointer min-h-[40px] flex items-center justify-center"
           >
             Concluir Comanda
           </button>

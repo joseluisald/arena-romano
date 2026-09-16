@@ -10,18 +10,16 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Share2, 
-  RefreshCw,
-  RotateCcw,
-  Sparkles,
-  Award
+  Award,
+  ShieldCheck,
+  Check
 } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'hoje' | 'semana' | 'mes' | 'todos'>('hoje');
-  const [customDate, setCustomDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [customDate] = useState(() => new Date().toISOString().split('T')[0]);
 
   const allGames = store.getGames();
-  const todayStr = new Date().toISOString().split('T')[0];
 
   // Filter games based on period
   const filteredGames = allGames.filter(g => {
@@ -104,57 +102,51 @@ export const ReportsView: React.FC = () => {
   };
 
   const handleSendReminderWhatsApp = (item: typeof pendingPlayersList[0]) => {
-    const text = `Olá ${item.playerName}! ⚽ Aqui é da *Arena Romano*. Verificamos uma pendência de consumo no jogo *${item.gameTitle}* no valor de *${formatCurrency(item.amount)}*. Chave Pix da quadra: contato@arenaromano.com.br. Obrigado!`;
+    const text = `Olá ${item.playerName}! ⚽ Aqui é da *Arena Romano*. Notamos uma comanda em aberto no jogo *${item.gameTitle}* no valor de *${formatCurrency(item.amount)}*. Chave Pix da quadra: contato@arenaromano.com.br. Obrigado!`;
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/?text=${encoded}`, '_blank');
   };
 
-  const handleResetData = () => {
-    if (confirm('Deseja restaurar os dados de demonstração iniciais da Arena Romano?')) {
-      store.resetToDefaults();
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 space-y-4 pb-24 sm:pb-12 text-slate-100">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-28 md:pb-12 text-slate-100">
       
-      {/* Clean Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#121218] p-3.5 sm:p-4 rounded-2xl border border-[#20202c]">
+      {/* Header Card */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-md shadow-black/20">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-            Relatórios & Fechamento Financeiro
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+            Relatórios Financeiros & Fechamento de Caixa
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Faturamento da quadra, consumo do bar e controle de caixa.
+          <p className="text-xs text-slate-400 mt-1">
+            Apuração de receitas de locação de quadra, consumo do bar e valores pendentes.
           </p>
         </div>
 
         {/* Period Filter Selector */}
-        <div className="flex items-center gap-1 flex-wrap text-xs">
+        <div className="flex items-center gap-1.5 flex-wrap text-xs">
           {(['hoje', 'semana', 'mes', 'todos'] as const).map(period => (
             <button
               key={period}
               onClick={() => setSelectedPeriod(period)}
-              className={`px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-2 rounded-xl font-bold transition-all cursor-pointer ${
                 selectedPeriod === period
-                  ? 'bg-[#f27d26] text-white'
-                  : 'bg-[#181822] text-slate-400 hover:text-slate-200 border border-[#28283a]'
+                  ? 'bg-[#FF6600] text-white shadow-sm'
+                  : 'bg-[#181D2B] text-slate-400 hover:text-slate-200 border border-[#23293D] hover:bg-[#1E2538]'
               }`}
             >
-              {period === 'hoje' ? 'Hoje' : period === 'semana' ? '7 Dias' : period === 'mes' ? 'Mês' : 'Geral'}
+              {period === 'hoje' ? 'Hoje' : period === 'semana' ? 'Últimos 7 Dias' : period === 'mes' ? 'Mês Atual' : 'Histórico Geral'}
             </button>
           ))}
         </div>
       </div>
 
       {/* Main KPI Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-[#111116] p-4 rounded-2xl border border-[#22222c] shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider">Jogos Realizados</span>
-            <CalendarDays size={18} className="text-orange-400" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Jogos Realizados</span>
+            <CalendarDays size={16} className="text-blue-400" />
           </div>
-          <span className="text-2xl sm:text-3xl font-black text-white block">
+          <span className="text-2xl sm:text-3xl font-black text-white block font-mono">
             {totalGames}
           </span>
           <span className="text-[11px] text-slate-400 font-medium">
@@ -162,12 +154,12 @@ export const ReportsView: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-[#111116] p-4 rounded-2xl border border-[#22222c] shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider">Locação Quadra</span>
-            <DollarSign size={18} className="text-orange-400" />
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Locação Quadra</span>
+            <DollarSign size={16} className="text-emerald-400" />
           </div>
-          <span className="text-xl sm:text-2xl font-black text-white block">
+          <span className="text-xl sm:text-2xl font-black text-white block font-mono">
             {formatCurrency(courtRevenue)}
           </span>
           <span className="text-[11px] text-slate-400 font-medium">
@@ -175,29 +167,29 @@ export const ReportsView: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-[#111116] p-4 rounded-2xl border border-[#22222c] shadow-lg">
-          <div className="flex items-center justify-between text-orange-400 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider">Vendas de Bar</span>
-            <Beer size={18} className="text-orange-400" />
+        <div className="bg-[#10131B] p-4 sm:p-5 rounded-2xl border border-[#1E2436] shadow-sm">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Consumo Bar</span>
+            <Beer size={16} className="text-[#FF6600]" />
           </div>
-          <span className="text-xl sm:text-2xl font-black text-[#f27d26] block">
+          <span className="text-xl sm:text-2xl font-black text-[#FF6600] block font-mono">
             {formatCurrency(productsRevenue)}
           </span>
           <span className="text-[11px] text-emerald-400 font-bold">
-            {totalPaid > 0 ? `${formatCurrency(totalPaid)} recebidos` : ''}
+            {totalPaid > 0 ? `${formatCurrency(totalPaid)} recebidos` : 'R$ 0,00 recebidos'}
           </span>
         </div>
 
-        <div className="bg-gradient-to-br from-[#181824] via-[#14141d] to-[#0f0f15] p-4 rounded-2xl border border-[#2e2e42] shadow-xl">
-          <div className="flex items-center justify-between text-orange-300 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider">Faturamento Total</span>
-            <TrendingUp size={18} className="text-orange-400" />
+        <div className="bg-gradient-to-br from-[#1E1216] via-[#141724] to-[#10131B] p-4 sm:p-5 rounded-2xl border border-orange-500/30 shadow-md">
+          <div className="flex items-center justify-between text-orange-300 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-wider text-orange-400">Faturamento Total</span>
+            <TrendingUp size={16} className="text-[#FF6600]" />
           </div>
-          <span className="text-xl sm:text-2xl font-black text-white block">
+          <span className="text-xl sm:text-2xl font-black text-white block font-mono">
             {formatCurrency(grandTotalRevenue)}
           </span>
-          <span className="text-[11px] text-slate-400 font-medium">
-            Quadra + Consumo de Bar
+          <span className="text-[11px] text-slate-300 font-medium">
+            Quadra + Consumo do Bar
           </span>
         </div>
       </div>
@@ -206,40 +198,40 @@ export const ReportsView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Left Column: Top Consumed Products */}
-        <div className="bg-[#111116] p-4 sm:p-5 rounded-2xl border border-[#22222c] shadow-xl space-y-4">
+        <div className="bg-[#10131B] p-5 sm:p-6 rounded-2xl border border-[#1E2436] shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Award size={18} className="text-orange-400" />
-              <h3 className="text-base font-extrabold text-white">Produtos Mais Consumidos</h3>
+              <Award size={18} className="text-[#FF6600]" />
+              <h3 className="text-base font-black text-white tracking-tight">Produtos Mais Vendidos</h3>
             </div>
-            <span className="text-xs font-bold text-slate-400">Total Unidades</span>
+            <span className="text-xs font-bold text-slate-400">Volume Total</span>
           </div>
 
           {topProducts.length === 0 ? (
-            <div className="text-center py-8 text-xs text-slate-400">
+            <div className="text-center py-10 text-xs text-slate-400 bg-[#0C0E15] rounded-xl border border-[#1A2030]">
               Nenhum produto consumido no período selecionado.
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               {topProducts.map((p, idx) => {
                 const percentage = Math.round((p.qty / maxProductQty) * 100);
                 return (
-                  <div key={p.name} className="space-y-1">
+                  <div key={p.name} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs font-bold">
-                      <span className="text-white flex items-center gap-1.5">
-                        <span className="text-orange-400/80 font-mono text-[11px]">#{idx + 1}</span>
+                      <span className="text-white flex items-center gap-2">
+                        <span className="text-orange-400 font-mono text-[11px] font-black">#{idx + 1}</span>
                         {p.name}
                       </span>
                       <div className="text-right">
-                        <span className="text-white font-black mr-2">{p.qty} un</span>
-                        <span className="text-[#f27d26] font-semibold">{formatCurrency(p.sales)}</span>
+                        <span className="text-white font-black mr-2.5 font-mono">{p.qty} un</span>
+                        <span className="text-[#FF6600] font-black font-mono">{formatCurrency(p.sales)}</span>
                       </div>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="h-2 w-full bg-[#0c0c11] rounded-full overflow-hidden border border-[#22222c]">
+                    <div className="h-2 w-full bg-[#0C0E15] rounded-full overflow-hidden border border-[#1A2030]">
                       <div
-                        className="h-full bg-gradient-to-r from-orange-500 to-amber-400 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-[#FF6600] to-amber-400 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -251,31 +243,31 @@ export const ReportsView: React.FC = () => {
         </div>
 
         {/* Right Column: Pending Debts List */}
-        <div className="bg-[#111116] p-4 sm:p-5 rounded-2xl border border-[#22222c] shadow-xl space-y-4 flex flex-col justify-between">
+        <div className="bg-[#10131B] p-5 sm:p-6 rounded-2xl border border-[#1E2436] shadow-sm space-y-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2">
                 <AlertCircle size={18} className="text-amber-400" />
-                <h3 className="text-base font-extrabold text-white">Valores Pendentes</h3>
+                <h3 className="text-base font-black text-white tracking-tight">Comandas Pendentes</h3>
               </div>
-              <span className="text-xs font-extrabold text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-black text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">
                 {pendingPlayersList.length} jogador(es) • {formatCurrency(totalPending)}
               </span>
             </div>
             <p className="text-xs text-slate-400 mb-3">
-              Controle de contas em aberto para recebimento no Pix ou balcão.
+              Controle de contas em aberto para recebimento no balcão ou via Pix.
             </p>
 
             {pendingPlayersList.length === 0 ? (
-              <div className="text-center py-8 text-xs text-emerald-300 bg-emerald-500/10 rounded-xl border border-emerald-500/30">
-                🎉 Tudo em dia! Nenhuma conta pendente no período.
+              <div className="text-center py-10 text-xs text-emerald-300 bg-emerald-500/10 rounded-2xl border border-emerald-500/30">
+                🎉 Tudo quitado! Nenhuma pendência no período selecionado.
               </div>
             ) : (
-              <div className="max-h-72 overflow-y-auto space-y-2 border border-[#22222c] rounded-xl p-2 bg-[#0c0c11] divide-y divide-[#1c1c28]">
+              <div className="max-h-72 overflow-y-auto space-y-2 border border-[#1E2436] rounded-2xl p-2.5 bg-[#0C0E15] divide-y divide-[#1A2030]">
                 {pendingPlayersList.map((item, idx) => (
                   <div
                     key={`${item.gameId}-${item.playerId}-${idx}`}
-                    className="pt-2 first:pt-0 flex items-center justify-between gap-2"
+                    className="pt-2.5 first:pt-0 flex items-center justify-between gap-2"
                   >
                     <div className="truncate">
                       <span className="font-bold text-xs sm:text-sm text-white block truncate">
@@ -287,21 +279,21 @@ export const ReportsView: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-black text-xs sm:text-sm text-amber-400">
+                      <span className="font-black text-xs sm:text-sm text-amber-400 font-mono">
                         {formatCurrency(item.amount)}
                       </span>
 
                       <button
                         onClick={() => handleSendReminderWhatsApp(item)}
-                        className="p-1.5 rounded-lg bg-[#25D366]/20 hover:bg-[#25D366] text-slate-300 hover:text-white transition-colors border border-[#25D366]/30 cursor-pointer"
-                        title="Enviar cobrança WhatsApp"
+                        className="p-2 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366] text-slate-300 hover:text-white transition-colors border border-[#25D366]/30 cursor-pointer"
+                        title="Enviar cobrança via WhatsApp"
                       >
                         <Share2 size={13} />
                       </button>
 
                       <button
                         onClick={() => handleMarkPlayerPaid(item.gameId, item.playerId)}
-                        className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-sm active-press cursor-pointer"
+                        className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm active-press cursor-pointer"
                       >
                         Marcar Pago
                       </button>
@@ -312,16 +304,9 @@ export const ReportsView: React.FC = () => {
             )}
           </div>
 
-          {/* Reset Store Action */}
-          <div className="pt-3 border-t border-[#22222c] flex items-center justify-between text-xs text-slate-400">
-            <span>Arena Romano v1.2</span>
-            <button
-              onClick={handleResetData}
-              className="text-slate-400 hover:text-orange-400 flex items-center gap-1 font-semibold cursor-pointer transition-colors"
-            >
-              <RotateCcw size={12} />
-              Restaurar Dados Demo
-            </button>
+          <div className="pt-3 border-t border-[#1E2436] flex items-center justify-between text-xs text-slate-400">
+            <span>Arena Romano • Gestão Financeira</span>
+            <span className="text-emerald-400 font-medium">Contas atualizadas</span>
           </div>
         </div>
       </div>

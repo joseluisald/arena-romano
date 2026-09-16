@@ -10,7 +10,8 @@ import {
   LogIn, 
   AlertCircle, 
   CheckCircle2, 
-  Database
+  Database,
+  ShieldCheck
 } from 'lucide-react';
 
 interface LoginViewProps {
@@ -36,7 +37,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     authService.fetchDbStatus().then((res) => {
       setDbStatus({
         connected: res.connected ?? false,
-        message: res.message || (res.connected ? 'Banco MySQL Conectado' : 'Modo Seguro em Memória'),
+        message: res.message || (res.connected ? 'Banco de Dados Conectado' : 'Modo Operacional Local'),
         tablesCount: res.tables ? res.tables.length : undefined,
       });
     }).catch(() => {
@@ -54,35 +55,35 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     setIsLoading(false);
 
     if (res.ok && res.user) {
-      setSuccessMsg(`Bem-vindo, ${res.user.name}!`);
+      setSuccessMsg(`Bem-vindo, ${res.user.name || res.user.username}!`);
       setTimeout(() => {
         onLoginSuccess(res.user!);
-      }, 350);
+      }, 300);
     } else {
-      setErrorMsg(res.error || 'Credenciais inválidas. Verifique o usuário e senha.');
+      setErrorMsg(res.error || 'Credenciais incorretas. Verifique seu usuário e senha.');
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#08080b] flex flex-col justify-between text-slate-100 relative overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-radial from-orange-500/10 via-transparent to-transparent pointer-events-none blur-3xl opacity-50" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-radial from-amber-600/5 via-transparent to-transparent pointer-events-none blur-3xl" />
+    <div className="min-h-screen w-full bg-[#090B10] flex flex-col justify-between text-slate-100 relative overflow-hidden selection:bg-[#FF6600] selection:text-white">
+      {/* Ambient background lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-gradient-to-b from-[#8E1632]/20 via-[#FF6600]/5 to-transparent pointer-events-none blur-3xl opacity-60" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#FF6600]/5 pointer-events-none blur-3xl" />
 
-      {/* Main Login Card Container - Centered without Top Header */}
+      {/* Main Login Card - Clean centered layout without header */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
-        <div className="w-full max-w-md bg-[#101017] rounded-3xl border border-[#232336] shadow-2xl shadow-black/80 overflow-hidden">
+        <div className="w-full max-w-md bg-[#10131B] rounded-3xl border border-[#1E2436] shadow-2xl shadow-black/80 overflow-hidden">
           
           {/* Card Header Banner with Arena Branding */}
-          <div className="p-6 sm:p-8 text-center border-b border-[#1c1c2b] bg-gradient-to-b from-[#161624] to-[#101017] flex flex-col items-center">
+          <div className="p-6 sm:p-8 text-center border-b border-[#1E2436] bg-gradient-to-b from-[#141824] to-[#10131B] flex flex-col items-center">
             <div className="mb-3">
               <ArenaLogo size="lg" />
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Área de Acesso Seguro
+              Acesso ao Sistema
             </h1>
             <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              Gestão de Quadras, Jogos e Comandas Digitais
+              Controle de Quadras, Partidas e Comandas Digitais
             </p>
           </div>
 
@@ -104,37 +105,37 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             )}
 
             {/* LOGIN FORM */}
-            <form onSubmit={handleLoginSubmit} className="space-y-3.5">
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
                   Usuário ou E-mail
                 </label>
                 <div className="relative">
-                  <UserIcon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <UserIcon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     required
-                    placeholder="Usuário ou e-mail"
+                    placeholder="Ex: admin ou operador"
                     value={usernameOrEmail}
                     onChange={e => setUsernameOrEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-[#252538] bg-[#0c0c12] text-white placeholder:text-slate-600 focus:border-[#f27d26] outline-none transition-colors min-h-[44px]"
+                    className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm font-semibold rounded-xl border border-[#1E2436] bg-[#0C0E15] text-white placeholder:text-slate-500 focus:border-[#FF6600] outline-none transition-colors min-h-[44px]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
+                <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1.5">
                   Senha de Acesso
                 </label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-11 py-2.5 text-xs sm:text-sm font-medium rounded-xl border border-[#252538] bg-[#0c0c12] text-white placeholder:text-slate-600 focus:border-[#f27d26] outline-none transition-colors min-h-[44px]"
+                    className="w-full pl-10 pr-11 py-2.5 text-xs sm:text-sm font-semibold rounded-xl border border-[#1E2436] bg-[#0C0E15] text-white placeholder:text-slate-500 focus:border-[#FF6600] outline-none transition-colors min-h-[44px]"
                   />
                   <button
                     type="button"
@@ -150,24 +151,24 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 px-4 rounded-xl bg-[#f27d26] hover:bg-[#ff8a3d] disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer active-press min-h-[46px] mt-2"
+                className="w-full py-3 px-4 rounded-xl bg-[#FF6600] hover:bg-[#FF7B1A] disabled:opacity-50 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer active-press min-h-[46px] mt-2"
               >
                 <LogIn size={17} />
-                <span>{isLoading ? 'Autenticando...' : 'Entrar no Sistema'}</span>
+                <span>{isLoading ? 'Autenticando...' : 'Acessar Arena Romano'}</span>
               </button>
             </form>
           </div>
 
           {/* Bottom Card Footer: Middleware & DB Info */}
-          <div className="px-6 py-3.5 bg-[#0b0b10] border-t border-[#1b1b28] flex items-center justify-between text-[11px] text-slate-400">
-            <div className="flex items-center gap-1.5 truncate">
-              <Database size={13} className={dbStatus?.connected ? 'text-emerald-400' : 'text-amber-400'} />
-              <span className="truncate">
+          <div className="px-6 py-3.5 bg-[#0C0E15] border-t border-[#1E2436] flex items-center justify-between text-[11px] text-slate-400">
+            <div className="flex items-center gap-2 truncate">
+              <Database size={14} className={dbStatus?.connected ? 'text-emerald-400' : 'text-amber-400'} />
+              <span className="truncate text-[11px] font-medium">
                 {dbStatus ? dbStatus.message : 'Verificando banco...'}
               </span>
             </div>
-            <span className="shrink-0 text-[10px] font-mono text-slate-500 bg-[#161622] px-2 py-0.5 rounded border border-[#232334]">
-              Logs Ativos
+            <span className="shrink-0 text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+              Seguro
             </span>
           </div>
 
@@ -175,8 +176,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       </main>
 
       {/* Footer System Status */}
-      <footer className="relative z-10 w-full py-3 px-4 text-center text-xs text-slate-400 border-t border-[#181822] bg-[#07070a]">
-        Arena Romano • Autenticação protegida por Middleware de Auditoria e Sessão
+      <footer className="relative z-10 w-full py-3.5 px-4 text-center text-xs text-slate-400 border-t border-[#1E2436] bg-[#0C0E15]/60">
+        Arena Romano • Sistema de Gestão Operacional & Financeira
       </footer>
     </div>
   );
