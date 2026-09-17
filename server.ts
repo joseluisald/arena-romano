@@ -389,7 +389,7 @@ async function initDatabaseTables() {
 // ====================================================================
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = 3001;
 
   app.use(express.json());
 
@@ -412,19 +412,19 @@ async function startServer() {
       const method = req.method;
 
       // Console format
-      const statusColor = status >= 500 ? '❌' : status >= 400 ? '⚠️' : '✅';
-      console.log(`[HTTP LOG ${statusColor}] ${method} ${url} | ${status} | ${duration}ms | User: ${user} | IP: ${clientIp}`);
+      // const statusColor = status >= 500 ? '❌' : status >= 400 ? '⚠️' : '✅';
+      // console.log(`[HTTP LOG ${statusColor}] ${method} ${url} | ${status} | ${duration}ms | User: ${user} | IP: ${clientIp}`);
 
       // Add to in-memory log buffer
-      addLog({
-        method,
-        url,
-        status_code: status,
-        duration_ms: duration,
-        user_identifier: user,
-        client_ip: String(clientIp),
-        timestamp,
-      });
+      // addLog({
+      //   method,
+      //   url,
+      //   status_code: status,
+      //   duration_ms: duration,
+      //   user_identifier: user,
+      //   client_ip: String(clientIp),
+      //   timestamp,
+      // });
 
       // Asynchronously record into MySQL system_logs if pool is ready
       const db = getDbPool();
